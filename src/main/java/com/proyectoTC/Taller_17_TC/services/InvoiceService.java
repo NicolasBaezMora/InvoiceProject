@@ -22,19 +22,30 @@ public class InvoiceService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
+    @Autowired
+    private InvoiceValidator invoiceValidator;
+
     public Page<Invoice> getAllInvoices(Pageable pageable) {
         return invoiceRepository.findAll(pageable);
+    }
+
+    public Invoice getInvoiceById(Long idInvoice) {
+        return invoiceRepository.findById(idInvoice)
+                .orElseThrow(() -> new NoDataFoundException("No se encontro Factura con el id: " + idInvoice));
     }
 
     @Transactional
     public Invoice saveInvoice(Invoice invoice) {
         try {
-            InvoiceValidator.saveInvoice(invoice);
-            if (invoice.getId() == null) return invoiceRepository.save(invoice);
+            if (invoice.getId() == null) {
+                invoiceValidator.saveInvoice(invoice);
+                return invoiceRepository.save(invoice);
+            }
             Invoice invoiceToUpdate = invoiceRepository.findById(invoice.getId())
                     .orElseThrow(() -> new NoDataFoundException("No se encontro Factura con el id: " + invoice.getId()));
             invoiceToUpdate.setInvoicedValue(invoice.getInvoicedValue());
             invoiceToUpdate.setInvoicedDate(invoice.getInvoicedDate());
+
             return invoiceRepository.save(invoiceToUpdate);
         } catch (ValidateServiceException | NoDataFoundException e) {
             log.error(e.getMessage());

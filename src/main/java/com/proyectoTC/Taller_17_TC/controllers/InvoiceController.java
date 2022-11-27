@@ -5,6 +5,7 @@ import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
 import com.proyectoTC.Taller_17_TC.models.Invoice;
 import com.proyectoTC.Taller_17_TC.response_models.ResponseInvoice;
 import com.proyectoTC.Taller_17_TC.services.InvoiceService;
+import com.proyectoTC.Taller_17_TC.services.WalletService;
 import com.proyectoTC.Taller_17_TC.utils.WrapperResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,9 @@ public class InvoiceController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private WalletService walletService;
 
     @GetMapping
     public ResponseEntity<WrapperResponse<ResponseInvoice>> getInvoices(
@@ -55,6 +59,10 @@ public class InvoiceController {
     ) {
         InvoiceDTO invoiceSaved =
                 invoiceConverter.fromEntity(invoiceService.saveInvoice(invoice));
+
+        // Actualizamos el balance de la cartera
+        walletService.updateBalanceWithSave(invoiceSaved);
+
         return new WrapperResponse<>(
                 true,
                 invoiceSaved,
@@ -67,8 +75,16 @@ public class InvoiceController {
     public ResponseEntity<WrapperResponse<InvoiceDTO>> updateInvoice(
             @RequestBody Invoice invoice
     ) {
+        Double invoicedValueOld = invoiceService.getInvoiceById(invoice.getId()).getInvoicedValue();
         InvoiceDTO invoiceUpdated =
                 invoiceConverter.fromEntity(invoiceService.saveInvoice(invoice));
+
+        walletService.updateBalanceWithUpdate(
+                invoiceUpdated.getInvoicedValue(),
+                invoicedValueOld,
+                invoiceUpdated.getWallet().getId()
+        );
+
         return new WrapperResponse<>(
                 true,
                 invoiceUpdated,
