@@ -15,6 +15,6 @@ public class BranchOfficeDTO {
     private String name;
     private char sanctionable;
     private String hash;
-    private AgreementType agreementType;
+    private AgreementTypeDTO agreementTypeDTO;
 
 }

@@ -2,8 +2,13 @@ package com.proyectoTC.Taller_17_TC.converters;
 
 import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
 import com.proyectoTC.Taller_17_TC.models.Invoice;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class InvoiceConverter extends AbstractConverter<Invoice, InvoiceDTO> {
+
+    @Autowired
+    private WalletConverter walletConverter;
+
     @Override
     public Invoice fromDTO(InvoiceDTO dto) {
         if (dto == null) return null;
@@ -11,7 +16,7 @@ public class InvoiceConverter extends AbstractConverter<Invoice, InvoiceDTO> {
                 .id(dto.getId())
                 .invoicedValue(dto.getInvoicedValue())
                 .invoicedDate(dto.getInvoicedDate())
-                .wallet(dto.getWallet())
+                .wallet(walletConverter.fromDTO(dto.getWalletDTO()))
                 .stateInvoice(dto.getStateInvoice())
                 .build();
     }
@@ -23,7 +28,7 @@ public class InvoiceConverter extends AbstractConverter<Invoice, InvoiceDTO> {
                 .id(entity.getId())
                 .invoicedValue(entity.getInvoicedValue())
                 .invoicedDate(entity.getInvoicedDate())
-                .wallet(entity.getWallet())
+                .walletDTO(walletConverter.fromEntity(entity.getWallet()))
                 .stateInvoice(entity.getStateInvoice())
                 .build();
     }

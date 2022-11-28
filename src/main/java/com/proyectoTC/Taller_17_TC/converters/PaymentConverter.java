@@ -2,8 +2,19 @@ package com.proyectoTC.Taller_17_TC.converters;
 
 import com.proyectoTC.Taller_17_TC.dtos.PaymentDTO;
 import com.proyectoTC.Taller_17_TC.models.Payment;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PaymentConverter extends AbstractConverter<Payment, PaymentDTO> {
+
+    @Autowired
+    private StatePaymentConverter statePaymentConverter;
+
+    @Autowired
+    private InvoiceConverter invoiceConverter;
+
+    @Autowired
+    private BranchOfficeConverter branchOfficeConverter;
+
     @Override
     public Payment fromDTO(PaymentDTO dto) {
         if (dto == null) return null;
@@ -11,10 +22,10 @@ public class PaymentConverter extends AbstractConverter<Payment, PaymentDTO> {
                 .id(dto.getId())
                 .paymentDate(dto.getPaymentDate())
                 .paymentType(dto.getPaymentType())
-                .statePayment(dto.getStatePayment())
+                .statePayment(statePaymentConverter.fromDTO(dto.getStatePaymentDTO()))
                 .paymentValue(dto.getPaymentValue())
-                .invoice(dto.getInvoice())
-                .branchOffice(dto.getBranchOffice())
+                .invoice(invoiceConverter.fromDTO(dto.getInvoiceDTO()))
+                .branchOffice(branchOfficeConverter.fromDTO(dto.getBranchOfficeDTO()))
                 .build();
     }
 
@@ -25,10 +36,10 @@ public class PaymentConverter extends AbstractConverter<Payment, PaymentDTO> {
                 .id(entity.getId())
                 .paymentDate(entity.getPaymentDate())
                 .paymentType(entity.getPaymentType())
-                .statePayment(entity.getStatePayment())
+                .statePaymentDTO(statePaymentConverter.fromEntity(entity.getStatePayment()))
                 .paymentValue(entity.getPaymentValue())
-                .invoice(entity.getInvoice())
-                .branchOffice(entity.getBranchOffice())
+                .invoiceDTO(invoiceConverter.fromEntity(entity.getInvoice()))
+                .branchOfficeDTO(branchOfficeConverter.fromEntity(entity.getBranchOffice()))
                 .build();
     }
 }

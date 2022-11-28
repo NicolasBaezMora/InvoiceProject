@@ -16,7 +16,7 @@ public class PaymentDTO {
     private String paymentDate;
     private String paymentType;
     private Double paymentValue;
-    private BranchOffice branchOffice;
-    private Invoice invoice;
-    private StatePayment statePayment;
+    private BranchOfficeDTO branchOfficeDTO;
+    private InvoiceDTO invoiceDTO;
+    private StatePaymentDTO statePaymentDTO;
 }

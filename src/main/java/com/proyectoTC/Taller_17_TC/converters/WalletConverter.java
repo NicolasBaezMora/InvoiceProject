@@ -2,15 +2,20 @@ package com.proyectoTC.Taller_17_TC.converters;
 
 import com.proyectoTC.Taller_17_TC.dtos.WalletDTO;
 import com.proyectoTC.Taller_17_TC.models.Wallet;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class WalletConverter extends AbstractConverter<Wallet, WalletDTO> {
+
+    @Autowired
+    private ClientConverter clientConverter;
+
     @Override
     public Wallet fromDTO(WalletDTO dto) {
         if (dto == null) return null;
         return Wallet.builder()
                 .id(dto.getId())
                 .balance(dto.getBalance())
-                .client(dto.getClient())
+                .client(clientConverter.fromDTO(dto.getClientDTO()))
                 .build();
     }
 
@@ -20,7 +25,7 @@ public class WalletConverter extends AbstractConverter<Wallet, WalletDTO> {
         return WalletDTO.builder()
                 .id(entity.getId())
                 .balance(entity.getBalance())
-                .client(entity.getClient())
+                .clientDTO(clientConverter.fromEntity(entity.getClient()))
                 .build();
     }
 }

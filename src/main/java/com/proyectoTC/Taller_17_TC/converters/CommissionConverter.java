@@ -2,8 +2,13 @@ package com.proyectoTC.Taller_17_TC.converters;
 
 import com.proyectoTC.Taller_17_TC.dtos.CommissionDTO;
 import com.proyectoTC.Taller_17_TC.models.Commission;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CommissionConverter extends AbstractConverter<Commission, CommissionDTO> {
+
+    @Autowired
+    private BranchOfficeConverter branchOfficeConverter;
+
     @Override
     public Commission fromDTO(CommissionDTO dto) {
         if (dto == null) return null;
@@ -13,7 +18,7 @@ public class CommissionConverter extends AbstractConverter<Commission, Commissio
                 .dateGen(dto.getDateGen())
                 .dateInitialCalculation(dto.getDateInitialCalculation())
                 .dateEndCalculation(dto.getDateEndCalculation())
-                .branchOffice(dto.getBranchOffice())
+                .branchOffice(branchOfficeConverter.fromDTO(dto.getBranchOfficeDTO()))
                 .build();
     }
 
@@ -26,7 +31,7 @@ public class CommissionConverter extends AbstractConverter<Commission, Commissio
                 .dateGen(entity.getDateGen())
                 .dateInitialCalculation(entity.getDateInitialCalculation())
                 .dateEndCalculation(entity.getDateEndCalculation())
-                .branchOffice(entity.getBranchOffice())
+                .branchOfficeDTO(branchOfficeConverter.fromEntity(entity.getBranchOffice()))
                 .build();
     }
 }

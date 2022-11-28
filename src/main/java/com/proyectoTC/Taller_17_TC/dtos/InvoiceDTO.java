@@ -14,6 +14,6 @@ public class InvoiceDTO {
     private Long id;
     private Double invoicedValue;
     private String invoicedDate;
-    private Wallet wallet;
+    private WalletDTO walletDTO;
     private StateInvoice stateInvoice;
 }

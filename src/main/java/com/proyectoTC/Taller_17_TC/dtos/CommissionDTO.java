@@ -16,7 +16,7 @@ public class CommissionDTO {
     private String dateGen;
     private String dateEndCalculation;
     private String dateInitialCalculation;
-    private BranchOffice branchOffice;
+    private BranchOfficeDTO branchOfficeDTO;
 
 
 }

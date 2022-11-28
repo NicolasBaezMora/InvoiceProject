@@ -31,13 +31,35 @@ public class InvoiceController {
     @Autowired
     private WalletService walletService;
 
-    @GetMapping
-    public ResponseEntity<WrapperResponse<ResponseInvoice>> getInvoices(
+    @GetMapping(value = "/pending")
+    public ResponseEntity<WrapperResponse<ResponseInvoice>> getPendingInvoices(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "3") int size
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Invoice> pageInvoice = invoiceService.getAllInvoices(pageable);
+        Page<Invoice> pageInvoice = invoiceService.getAllPendingInvoices(pageable);
+
+        ResponseInvoice responseInvoice = ResponseInvoice.builder()
+                .totalInvoices(pageInvoice.getTotalElements())
+                .invoices(invoiceConverter.fromEntity(pageInvoice.getContent()))
+                .currentPage(pageInvoice.getNumber())
+                .totalPages(pageInvoice.getTotalPages())
+                .build();
+
+        return new WrapperResponse<>(
+                true,
+                responseInvoice,
+                "success"
+        ).createResponse(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/paid")
+    public ResponseEntity<WrapperResponse<ResponseInvoice>> getPaidInvoices(
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Invoice> pageInvoice = invoiceService.getAllPaidInvoices(pageable);
 
         ResponseInvoice responseInvoice = ResponseInvoice.builder()
                 .totalInvoices(pageInvoice.getTotalElements())
@@ -61,7 +83,7 @@ public class InvoiceController {
                 invoiceConverter.fromEntity(invoiceService.saveInvoice(invoice));
 
         // Actualizamos el balance de la cartera
-        walletService.updateBalanceWithSave(invoiceSaved);
+        walletService.updateBalanceWithSave(invoiceConverter.fromDTO(invoiceSaved));
 
         return new WrapperResponse<>(
                 true,
@@ -82,7 +104,7 @@ public class InvoiceController {
         walletService.updateBalanceWithUpdate(
                 invoiceUpdated.getInvoicedValue(),
                 invoicedValueOld,
-                invoiceUpdated.getWallet().getId()
+                invoiceUpdated.getWalletDTO().getId()
         );
 
         return new WrapperResponse<>(

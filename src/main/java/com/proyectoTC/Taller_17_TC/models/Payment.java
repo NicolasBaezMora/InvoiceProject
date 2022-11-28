@@ -27,7 +27,7 @@ public class Payment {
     @Column(name = "PAYMENT_VALUE", nullable = false)
     private Double paymentValue;
 
-    @ManyToOne
+    @ManyToOne(/*fetch = FetchType.EAGER*/)
     @JoinColumn(name = "ID_BRANCH_OFFICE", nullable = false)
     private BranchOffice branchOffice;
 

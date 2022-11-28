@@ -13,6 +13,7 @@ public class ClientConverter extends AbstractConverter<Client, ClientDTO> {
                 .name(dto.getName())
                 .billingAddress(dto.getBillingAddress())
                 .email(dto.getEmail())
+                .phone(dto.getPhone())
                 //.wallet(Wallet.builder().id(dto.getWallet().getId()).balance(dto.getWallet().getBalance()).build())
                 .hash(dto.getHash())
                 .build();
@@ -26,6 +27,7 @@ public class ClientConverter extends AbstractConverter<Client, ClientDTO> {
                 .name(entity.getName())
                 .billingAddress(entity.getBillingAddress())
                 .email(entity.getEmail())
+                .phone(entity.getPhone())
                 //.wallet(Wallet.builder().id(entity.getWallet().getId()).balance(entity.getWallet().getBalance()).build())
                 .hash(entity.getHash())
                 .build();

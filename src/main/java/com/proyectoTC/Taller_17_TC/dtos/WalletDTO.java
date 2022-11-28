@@ -14,6 +14,6 @@ public class WalletDTO {
 
     private Long id;
     private Double balance;
-    private Client client;
+    private ClientDTO clientDTO;
 
 }
