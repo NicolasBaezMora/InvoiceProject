@@ -1,8 +1,7 @@
-package com.proyectoTC.Taller_17_TC.utils;
+package com.proyectoTC.Taller_17_TC.response_models;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;

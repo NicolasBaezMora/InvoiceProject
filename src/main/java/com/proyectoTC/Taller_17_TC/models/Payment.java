@@ -32,7 +32,7 @@ public class Payment {
     private BranchOffice branchOffice;
 
     @ManyToOne
-    @JoinColumn(name = "ID_INVOICE", nullable = false)
+    @JoinColumn(name = "ID_INVOICE")
     private Invoice invoice;
 
     @ManyToOne

@@ -1,16 +1,17 @@
 package com.proyectoTC.Taller_17_TC.response_models;
 
 import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@Builder
-public class ResponseInvoice {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResponseInvoice<T> {
     private Long totalInvoices;
-    private List<InvoiceDTO> invoices;
+    private List<T> data;
     private int totalPages;
     private int currentPage;
 }

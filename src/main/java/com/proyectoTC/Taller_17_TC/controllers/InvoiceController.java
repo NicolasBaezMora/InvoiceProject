@@ -6,7 +6,7 @@ import com.proyectoTC.Taller_17_TC.models.Invoice;
 import com.proyectoTC.Taller_17_TC.response_models.ResponseInvoice;
 import com.proyectoTC.Taller_17_TC.services.InvoiceService;
 import com.proyectoTC.Taller_17_TC.services.WalletService;
-import com.proyectoTC.Taller_17_TC.utils.WrapperResponse;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Wrapper;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/invoice")
@@ -32,19 +30,18 @@ public class InvoiceController {
     private WalletService walletService;
 
     @GetMapping(value = "/pending")
-    public ResponseEntity<WrapperResponse<ResponseInvoice>> getPendingInvoices(
+    public ResponseEntity<WrapperResponse<ResponseInvoice<InvoiceDTO>>> getPendingInvoices(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Invoice> pageInvoice = invoiceService.getAllPendingInvoices(pageable);
 
-        ResponseInvoice responseInvoice = ResponseInvoice.builder()
-                .totalInvoices(pageInvoice.getTotalElements())
-                .invoices(invoiceConverter.fromEntity(pageInvoice.getContent()))
-                .currentPage(pageInvoice.getNumber())
-                .totalPages(pageInvoice.getTotalPages())
-                .build();
+        ResponseInvoice<InvoiceDTO> responseInvoice = new ResponseInvoice<>();
+        responseInvoice.setTotalInvoices(pageInvoice.getTotalElements());
+        responseInvoice.setData(invoiceConverter.fromEntity(pageInvoice.getContent()));
+        responseInvoice.setCurrentPage(pageInvoice.getNumber());
+        responseInvoice.setTotalPages(pageInvoice.getTotalPages());
 
         return new WrapperResponse<>(
                 true,
@@ -54,19 +51,18 @@ public class InvoiceController {
     }
 
     @GetMapping(value = "/paid")
-    public ResponseEntity<WrapperResponse<ResponseInvoice>> getPaidInvoices(
+    public ResponseEntity<WrapperResponse<ResponseInvoice<InvoiceDTO>>> getPaidInvoices(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Invoice> pageInvoice = invoiceService.getAllPaidInvoices(pageable);
 
-        ResponseInvoice responseInvoice = ResponseInvoice.builder()
-                .totalInvoices(pageInvoice.getTotalElements())
-                .invoices(invoiceConverter.fromEntity(pageInvoice.getContent()))
-                .currentPage(pageInvoice.getNumber())
-                .totalPages(pageInvoice.getTotalPages())
-                .build();
+        ResponseInvoice<InvoiceDTO> responseInvoice = new ResponseInvoice<>();
+        responseInvoice.setTotalInvoices(pageInvoice.getTotalElements());
+        responseInvoice.setData(invoiceConverter.fromEntity(pageInvoice.getContent()));
+        responseInvoice.setCurrentPage(pageInvoice.getNumber());
+        responseInvoice.setTotalPages(pageInvoice.getTotalPages());
 
         return new WrapperResponse<>(
                 true,

@@ -3,13 +3,14 @@ package com.proyectoTC.Taller_17_TC.configuration;
 import com.proyectoTC.Taller_17_TC.exceptions.GeneralServiceException;
 import com.proyectoTC.Taller_17_TC.exceptions.NoDataFoundException;
 import com.proyectoTC.Taller_17_TC.exceptions.ValidateServiceException;
-import com.proyectoTC.Taller_17_TC.utils.WrapperResponse;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
@@ -58,6 +59,16 @@ public class ErrorHandlerConfig extends ResponseEntityExceptionHandler {
                 e.getMessage()
         );
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> maxUploadFileSizeExceeded(MaxUploadSizeExceededException e) {
+        log.error(e.getMessage(), e);
+        return new WrapperResponse<>(
+                false,
+                null,
+                "El tamaño del archivo excede el maximo permitido (1MB)"
+        ).createResponse(HttpStatus.EXPECTATION_FAILED);
     }
 
 

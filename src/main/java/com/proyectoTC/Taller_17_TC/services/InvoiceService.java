@@ -61,17 +61,14 @@ public class InvoiceService {
 
                         invoice.setInvoicedValue(0D);
                         invoice.setStateInvoice(StateInvoice.builder().id(1L).build());
-                    }
-                    if (balanceWallet < invoice.getInvoicedValue()) {
+                    } else {
                         // Actualizamos el balance de la cartera
                         wallet.setBalance(0D);
                         walletRepository.save(wallet);
 
                         invoice.setInvoicedValue(diff);
                     }
-
                 }
-
                 invoiceValidator.saveInvoice(invoice);
                 return invoiceRepository.save(invoice);
             }
