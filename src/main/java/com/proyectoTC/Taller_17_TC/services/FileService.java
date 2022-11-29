@@ -22,8 +22,6 @@ import java.util.Optional;
 @Slf4j
 public class FileService {
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
     @Autowired
     private BranchOfficeRepository branchOfficeRepository;
 

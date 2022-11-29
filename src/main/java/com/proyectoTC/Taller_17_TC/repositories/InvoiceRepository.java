@@ -5,15 +5,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
+@Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
-    @Query(value = "SELECT * FROM APP_PAGOS.INVOICE I WHERE I.ID_STATE_INVOICE = 51", nativeQuery = true)
+    @Query(
+            value = "SELECT * FROM INVOICE I WHERE I.ID_STATE_INVOICE = 51",
+            countQuery = "SELECT COUNT(*) FROM INVOICE I WHERE I.ID_STATE_INVOICE = 51",
+            nativeQuery = true
+    )
     Page<Invoice> getPendingInvoices(Pageable page);
 
-    @Query(value = "SELECT * FROM APP_PAGOS.INVOICE I WHERE I.ID_STATE_INVOICE = 1", nativeQuery = true)
+    @Query(
+            value = "SELECT * FROM INVOICE I WHERE I.ID_STATE_INVOICE = 1",
+            countQuery = "SELECT COUNT(*) FROM INVOICE I WHERE I.ID_STATE_INVOICE = 1",
+            nativeQuery = true
+    )
     Page<Invoice> getPaidInvoices(Pageable page);
 
 }

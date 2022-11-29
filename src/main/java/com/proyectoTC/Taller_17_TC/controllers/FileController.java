@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Wrapper;
 
 @RestController
-@RequestMapping(path = "/files")
+@RequestMapping(path = "/file")
 public class FileController {
 
     @Autowired
