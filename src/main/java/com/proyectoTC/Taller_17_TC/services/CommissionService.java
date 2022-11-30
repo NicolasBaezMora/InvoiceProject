@@ -22,7 +22,7 @@ public class CommissionService {
     public Page<Commission> getAllCommissionsByBranchOffice(Pageable pageable, String hash) {
         BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)
                 .orElseThrow(() -> new NoDataFoundException("No se encontro entidad con el hash: " + hash));
-        return commissionRepository.getCommissions(pageable, branchOffice.getId());
+        return commissionRepository.getCommissions(pageable, branchOffice);
     }
 
 }
