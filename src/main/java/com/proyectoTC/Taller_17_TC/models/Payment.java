@@ -18,7 +18,7 @@ public class Payment {
     @SequenceGenerator(name = "seqIdPayment", sequenceName = "seq_id_payment")
     private Long id;
 
-    @Column(name = "PAYMENT_DATE", nullable = false)
+    @Column(name = "PAYMENT_DATE", nullable = false, length = 10)
     private String paymentDate;
 
     @Column(name = "PAYMENT_TYPE", nullable = false, length = 50)

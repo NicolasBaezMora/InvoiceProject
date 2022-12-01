@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class CommissionService {
 
@@ -23,6 +25,12 @@ public class CommissionService {
         BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)
                 .orElseThrow(() -> new NoDataFoundException("No se encontro entidad con el hash: " + hash));
         return commissionRepository.getCommissions(pageable, branchOffice);
+    }
+
+
+    @Transactional
+    public void generateCommissionManually(Long idBranchOffice, String dateInitial, String dateEnd) {
+        commissionRepository.generateCommission(idBranchOffice, dateInitial, dateEnd);
     }
 
 }

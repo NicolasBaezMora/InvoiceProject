@@ -13,10 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +31,7 @@ public class CommissionController {
     public ResponseEntity<WrapperResponse<ResponseData<CommissionDTO>>> getCommissions(
             @RequestParam(value = "hash") String hash,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "3") int size
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Commission> commissionPage = commissionService.getAllCommissionsByBranchOffice(pageable, hash);
@@ -52,6 +49,20 @@ public class CommissionController {
         ).createResponse(HttpStatus.OK);
     }
 
-    // TODO: GENERAR COMISION MANUALMENTE
+    @PostMapping
+    public ResponseEntity<WrapperResponse<Object>> generateCommission(
+            @RequestParam("idBranchOffice") Long idBranchOffice,
+            @RequestParam("dateInitial") String dateInitial,
+            @RequestParam("dateEnd") String dateEnd
+    ) {
+
+        commissionService.generateCommissionManually(idBranchOffice, dateInitial, dateEnd);
+
+        return new WrapperResponse<>(
+            true,
+                null,
+                "success"
+        ).createResponse(HttpStatus.OK);
+    }
 
 }

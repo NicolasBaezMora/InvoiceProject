@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class FileService {
     private WalletRepository walletRepository;
 
 
+    @Transactional
     public ResponseFile loadFile(MultipartFile file, String hash) {
         long cons = 0L;
         long incons = 0L;
@@ -75,7 +77,7 @@ public class FileService {
                         // Reviso si existe la factura
                         Optional<Invoice> invoiceFound = invoiceRepository.findById(idInvoice);
                         if (invoiceFound.isEmpty()) {
-                            generateInconsistentPayment(valuePay, dateDetail, typePay, idBranchOffice);
+                            generateInconsistentPayment(valuePay, dateDetail, typePay, idBranchOffice, null);
 
                             incons++;
 
@@ -98,7 +100,7 @@ public class FileService {
 
                                 updateWallet(invoiceToPay, valuePay);
                             } else {
-                                generateInconsistentPayment(valuePay, dateDetail, typePay, idBranchOffice);
+                                generateInconsistentPayment(valuePay, dateDetail, typePay, idBranchOffice, idInvoice);
 
                                 incons++;
 
@@ -135,16 +137,16 @@ public class FileService {
             double valuePay,
             String dateDetail,
             int typePay,
-            Long idBranchOffice
+            Long idBranchOffice,
+            Long idInvoice
     ) {
-        paymentRepository.save(
-                Payment.builder()
-                        .paymentValue(valuePay)
-                        .paymentDate(convertDate(dateDetail))
-                        .paymentType(PaymentType.getTypePay(typePay))
-                        .statePayment(StatePayment.builder().id(51L).build())
-                        .branchOffice(BranchOffice.builder().id(idBranchOffice).build())
-                        .build()
+        paymentRepository.savePayment(
+                valuePay,
+                convertDate(dateDetail),
+                PaymentType.getTypePay(typePay),
+                idBranchOffice,
+                idInvoice,
+                51L
         );
     }
 
@@ -155,15 +157,13 @@ public class FileService {
             Long idBranchOffice,
             Long idInvoice
     ){
-        paymentRepository.save(
-                Payment.builder()
-                        .paymentValue(valuePay)
-                        .paymentDate(convertDate(dateDetail))
-                        .paymentType(PaymentType.getTypePay(typePay))
-                        .statePayment(StatePayment.builder().id(1L).build())
-                        .branchOffice(BranchOffice.builder().id(idBranchOffice).build())
-                        .invoice(Invoice.builder().id(idInvoice).build())
-                        .build()
+        paymentRepository.savePayment(
+                valuePay,
+                convertDate(dateDetail),
+                PaymentType.getTypePay(typePay),
+                idBranchOffice,
+                idInvoice,
+                1L
         );
     }
 

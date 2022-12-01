@@ -21,13 +21,13 @@ public class Commission {
     @Column(name = "VALUE", nullable = false)
     private Double value;
 
-    @Column(name = "DATE_GEN", nullable = false)
+    @Column(name = "DATE_GEN", nullable = false, length = 10)
     private String dateGen;
 
-    @Column(name = "DATE_EDN_CALCULATION", nullable = false)
+    @Column(name = "DATE_END_CALCULATION", nullable = false, length = 10)
     private String dateEndCalculation;
 
-    @Column(name = "DATE_INITIAL_CALCULATION", nullable = false)
+    @Column(name = "DATE_INITIAL_CALCULATION", nullable = false, length = 10)
     private String dateInitialCalculation;
 
     @ManyToOne

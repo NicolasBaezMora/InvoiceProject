@@ -27,26 +27,15 @@ public class WalletService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // **************************************** METODO JDBC TRANSACCIONAL ****************************************
     @Transactional
     public void updateBalanceWithSave(Invoice invoiceSaved) {
         Wallet walletFound = walletRepository.findById(invoiceSaved.getWallet().getId())
                 .orElseThrow(() -> new NoDataFoundException("No se encontro billetera con el id:" + invoiceSaved.getWallet().getId()));
-        walletFound.setBalance(walletFound.getBalance() - invoiceSaved.getInvoicedValue());
-        walletRepository.save(walletFound);
+        Double newBalance = walletFound.getBalance() - invoiceSaved.getInvoicedValue();
+        jdbcTemplate.update("{CALL PKG_WALLET_TRANSACTION.UPDATE_BALANCE(?, ?)}", walletFound.getId(), newBalance);
     }
-
-    @Transactional
-    public void updateBalanceWithUpdate(
-            Double newInvoicedValue,
-            Double oldInvoicedValue,
-            Long idWallet) {
-        Wallet walletFound = walletRepository.findById(idWallet)
-                .orElseThrow(() -> new NoDataFoundException("No se encontro billetera con el id:" + idWallet));
-        walletFound.setBalance((walletFound.getBalance() + oldInvoicedValue) - newInvoicedValue);
-        walletRepository.save(walletFound);
-    }
-
-    // ****************************************  IMPLEMENTACIÓN DEL METODO JDBC  ****************************************
+    // ************************************************************************************************************************
 
     public Wallet getWallet(String email, String hash) {
         Client client =  clientRepository.findByEmail(email)
@@ -61,7 +50,6 @@ public class WalletService {
 
     }
 
-    // ******************************************************************************************************************
 
 
 }

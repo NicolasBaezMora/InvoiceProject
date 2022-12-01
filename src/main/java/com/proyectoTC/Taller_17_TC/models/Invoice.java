@@ -21,7 +21,7 @@ public class Invoice {
     @Column(name = "INVOICED_VALUE", nullable = false)
     private Double invoicedValue;
 
-    @Column(name = "INVOICED_DATE", nullable = false)
+    @Column(name = "INVOICED_DATE", nullable = false, length = 10)
     private String invoicedDate;
 
     @ManyToOne

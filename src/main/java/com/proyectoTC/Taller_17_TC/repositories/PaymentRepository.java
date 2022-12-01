@@ -32,4 +32,20 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             nativeQuery = true
     )
     Page<Payment> getInconsistentPayments(Pageable pageable, @Param(value = "idBranchOffice") Long idBranchOffice);
+
+    // **************************************** METODO JPQL TRANSACCIONAL ****************************************
+    @Modifying
+    @Query(
+            value = "{CALL PKG_PAYMENT_TRANSACTION.CREATE_PAYMENT(:payValue, :payDate, :payType, :idBranchOffice, :idInvoice, :idState)}",
+            nativeQuery = true
+    )
+    void savePayment(
+        @Param(value = "payValue") Double payValue,
+        @Param(value = "payDate") String payDate,
+        @Param(value = "payType") String payType,
+        @Param(value = "idBranchOffice") Long idBranchOffice,
+        @Param(value = "idInvoice") Long idInvoice,
+        @Param(value = "idState") Long idState
+    );
+    // ************************************************************************************************************************
 }

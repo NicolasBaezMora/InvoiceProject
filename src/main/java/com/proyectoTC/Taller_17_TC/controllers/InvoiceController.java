@@ -88,26 +88,4 @@ public class InvoiceController {
         ).createResponse(HttpStatus.OK);
     }
 
-
-    @PutMapping
-    public ResponseEntity<WrapperResponse<InvoiceDTO>> updateInvoice(
-            @RequestBody Invoice invoice
-    ) {
-        Double invoicedValueOld = invoiceService.getInvoiceById(invoice.getId()).getInvoicedValue();
-        InvoiceDTO invoiceUpdated =
-                invoiceConverter.fromEntity(invoiceService.saveInvoice(invoice));
-
-        walletService.updateBalanceWithUpdate(
-                invoiceUpdated.getInvoicedValue(),
-                invoicedValueOld,
-                invoiceUpdated.getWalletDTO().getId()
-        );
-
-        return new WrapperResponse<>(
-                true,
-                invoiceUpdated,
-                "success"
-        ).createResponse(HttpStatus.OK);
-    }
-
 }
