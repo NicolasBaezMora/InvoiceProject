@@ -41,6 +41,7 @@ public class FileService {
         long cons = 0L;
         long incons = 0L;
         try {
+            Thread.sleep(1000);
             // Cargo en memoria los datos del archivo
             Reader readerData = new InputStreamReader(file.getInputStream());
             BufferedReader bufferData = new BufferedReader(readerData);
@@ -85,7 +86,7 @@ public class FileService {
                         }
                         // **********************************************************************************************
 
-                        // Extraigo los datos de la factura a pagar y proceso l información
+                        // Si existe la factura extraigo los datos de esta y proceso la información
                         Invoice invoiceToPay = invoiceFound.get();
                         if (invoiceToPay.getStateInvoice().getState().equals("PENDIENTE")) {
                             if (invoiceToPay.getInvoicedValue() == valuePay){
@@ -120,18 +121,18 @@ public class FileService {
             bufferData.close();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         return new ResponseFile(cons, incons);
     }
 
     private void updateWallet(Invoice invoicePaid, Double valuePay) {
-        Optional<Wallet> walletFound = walletRepository.findById(invoicePaid.getWallet().getId());
-        if (walletFound.isPresent()) {
-            Wallet walletToUpdate = walletFound.get();
-            walletToUpdate.setBalance(walletToUpdate.getBalance() + valuePay);
-            walletRepository.save(walletToUpdate);
-        }
+        Wallet walletFound = walletRepository.findById(invoicePaid.getWallet().getId())
+                .orElseThrow(() -> new ValidateServiceException("Billetera no encontrada"));
+        walletFound.setBalance(walletFound.getBalance() + valuePay);
+        walletRepository.save(walletFound);
     }
     private void generateInconsistentPayment(
             double valuePay,
