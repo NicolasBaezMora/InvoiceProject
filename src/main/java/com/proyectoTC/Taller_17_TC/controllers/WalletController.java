@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/wallet")
 public class WalletController {
@@ -26,6 +28,16 @@ public class WalletController {
 
     @Autowired
     private WalletConverter walletConverter;
+
+    @GetMapping(value = "all")
+    public ResponseEntity<WrapperResponse<List<WalletDTO>>> getAllWallets() {
+        List<WalletDTO> walletDTOList = walletConverter.fromEntity(walletService.getAllWallets());
+        return new WrapperResponse<>(
+                true,
+                walletDTOList,
+                "success"
+        ).createResponse(HttpStatus.OK);
+    }
 
     @GetMapping
     public ResponseEntity<WrapperResponse<WalletDTO>> getBalance(

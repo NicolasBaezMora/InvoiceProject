@@ -1,6 +1,7 @@
 package com.proyectoTC.Taller_17_TC.services;
 
 import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
+import com.proyectoTC.Taller_17_TC.dtos.WalletDTO;
 import com.proyectoTC.Taller_17_TC.exceptions.NoDataFoundException;
 import com.proyectoTC.Taller_17_TC.exceptions.ValidateServiceException;
 import com.proyectoTC.Taller_17_TC.models.Client;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class WalletService {
@@ -26,6 +28,10 @@ public class WalletService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public List<Wallet> getAllWallets(){
+        return walletRepository.findAll();
+    }
 
     // **************************************** METODO JDBC TRANSACCIONAL ****************************************
     @Transactional

@@ -41,7 +41,7 @@ public class FileService {
         long cons = 0L;
         long incons = 0L;
         try {
-            Thread.sleep(1000);
+            Thread.sleep(1000); // LATENCIA SIMULADA!!!!!!!!!!!!!
             // Cargo en memoria los datos del archivo
             Reader readerData = new InputStreamReader(file.getInputStream());
             BufferedReader bufferData = new BufferedReader(readerData);
