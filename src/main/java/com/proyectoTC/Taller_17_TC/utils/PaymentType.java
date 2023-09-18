@@ -1,18 +1,19 @@
 package com.proyectoTC.Taller_17_TC.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PaymentType {
 
+    private static final Map<Integer, String> types = Map.of(
+            1, "EFECTIVO",
+            2, "TARJETA DE CREDITO",
+            3, "TARJETA DEBITO"
+
+    );
     public static String getTypePay(int id) {
-        switch (id) {
-            case 1:
-                return "EFECTIVO";
-            case 2:
-                return "TARJETA DE CREDITO";
-            case 3:
-                return "TARJETA DEBITO";
-            default:
-                return "OTRO";
-        }
+        if (types.get(id) == null) return "Otro";
+        return types.get(id);
     }
 
 }

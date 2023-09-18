@@ -20,32 +20,29 @@ import javax.persistence.ManyToOne;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     @Query(
-            value = "SELECT ID, PAYMENT_DATE, PAYMENT_TYPE, PAYMENT_VALUE, ID_BRANCH_OFFICE, ID_INVOICE, ID_STATE_PAYMENT FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 1",
+            value = "SELECT ID, PAYMENT_DATE, PAYMENT_TYPE, PAYMENT_VALUE, ID_BRANCH_OFFICE, ID_INVOICE, ID_STATE_PAYMENT FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 1 ORDER BY P.ID",
             countQuery = "SELECT COUNT(1) FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 1",
             nativeQuery = true
     )
     Page<Payment> getConsistentPayments(Pageable pageable, @Param(value = "idBranchOffice") Long idBranchOffice);
 
     @Query(
-            value = "SELECT ID, PAYMENT_DATE, PAYMENT_TYPE, PAYMENT_VALUE, ID_BRANCH_OFFICE, ID_INVOICE, ID_STATE_PAYMENT FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 51",
+            value = "SELECT ID, PAYMENT_DATE, PAYMENT_TYPE, PAYMENT_VALUE, ID_BRANCH_OFFICE, ID_INVOICE, ID_STATE_PAYMENT FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 51 ORDER BY P.ID",
             countQuery = "SELECT COUNT(1) FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 51",
             nativeQuery = true
     )
     Page<Payment> getInconsistentPayments(Pageable pageable, @Param(value = "idBranchOffice") Long idBranchOffice);
 
-    // **************************************** METODO JPQL TRANSACCIONAL ****************************************
-    @Modifying
     @Query(
-            value = "{CALL PKG_PAYMENT_TRANSACTION.CREATE_PAYMENT(:payValue, :payDate, :payType, :idBranchOffice, :idInvoice, :idState)}",
+            value = "SELECT COUNT(1) FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 1",
             nativeQuery = true
     )
-    void savePayment(
-        @Param(value = "payValue") Double payValue,
-        @Param(value = "payDate") String payDate,
-        @Param(value = "payType") String payType,
-        @Param(value = "idBranchOffice") Long idBranchOffice,
-        @Param(value = "idInvoice") Long idInvoice,
-        @Param(value = "idState") Long idState
-    );
-    // ************************************************************************************************************************
+    Long getAmountConsistentPayments(@Param(value = "idBranchOffice") Long idBranchOffice);
+
+    @Query(
+            value = "SELECT COUNT(1) FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 51",
+            nativeQuery = true
+    )
+    Long getAmountInconsistentPayments(@Param(value = "idBranchOffice") Long idBranchOffice);
+
 }

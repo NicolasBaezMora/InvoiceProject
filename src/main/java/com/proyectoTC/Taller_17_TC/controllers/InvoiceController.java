@@ -31,11 +31,13 @@ public class InvoiceController {
 
     @GetMapping(value = "/pending")
     public ResponseEntity<WrapperResponse<ResponseData<InvoiceDTO>>> getPendingInvoices(
-            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page
+            //@RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<Invoice> pageInvoice = invoiceService.getAllPendingInvoices(pageable);
+
+        System.out.println(pageInvoice);
 
         ResponseData<InvoiceDTO> responseData = new ResponseData<>();
         responseData.setTotal(pageInvoice.getTotalElements());
@@ -52,10 +54,10 @@ public class InvoiceController {
 
     @GetMapping(value = "/paid")
     public ResponseEntity<WrapperResponse<ResponseData<InvoiceDTO>>> getPaidInvoices(
-            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page
+            //@RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<Invoice> pageInvoice = invoiceService.getAllPaidInvoices(pageable);
 
         ResponseData<InvoiceDTO> responseData = new ResponseData<>();

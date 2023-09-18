@@ -3,12 +3,17 @@ package com.proyectoTC.Taller_17_TC.controllers;
 import com.proyectoTC.Taller_17_TC.response_models.ResponseFile;
 import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import com.proyectoTC.Taller_17_TC.services.FileService;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Wrapper;
 
 @RestController
@@ -31,6 +36,20 @@ public class FileController {
                 "success"
         ).createResponse(HttpStatus.OK);
 
+    }
+
+    @GetMapping("/download")
+    public void download(HttpServletResponse httpServletResponse) {
+        try {
+            httpServletResponse.setContentType("text/txt");
+            httpServletResponse.addHeader("Content-Disposition","attachment; filename=\"data.txt\"");
+            CSVPrinter csvPrinter = new CSVPrinter(httpServletResponse.getWriter(), CSVFormat.DEFAULT);
+            csvPrinter.print("Hola");
+            csvPrinter.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

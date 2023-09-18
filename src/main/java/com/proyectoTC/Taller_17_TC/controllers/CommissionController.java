@@ -30,10 +30,10 @@ public class CommissionController {
     @GetMapping
     public ResponseEntity<WrapperResponse<ResponseData<CommissionDTO>>> getCommissions(
             @RequestParam(value = "hash") String hash,
-            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page
+            //@RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<Commission> commissionPage = commissionService.getAllCommissionsByBranchOffice(pageable, hash);
 
         ResponseData<CommissionDTO> responseData = new ResponseData<>();

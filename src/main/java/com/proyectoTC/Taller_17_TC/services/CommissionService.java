@@ -5,6 +5,8 @@ import com.proyectoTC.Taller_17_TC.models.BranchOffice;
 import com.proyectoTC.Taller_17_TC.models.Commission;
 import com.proyectoTC.Taller_17_TC.repositories.BranchOfficeRepository;
 import com.proyectoTC.Taller_17_TC.repositories.CommissionRepository;
+import com.proyectoTC.Taller_17_TC.repositories.PaymentRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,9 @@ public class CommissionService {
     @Autowired
     private BranchOfficeRepository branchOfficeRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
     public Page<Commission> getAllCommissionsByBranchOffice(Pageable pageable, String hash) {
         BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)
                 .orElseThrow(() -> new NoDataFoundException("No se encontro entidad con el hash: " + hash));
@@ -30,7 +35,9 @@ public class CommissionService {
 
     @Transactional
     public void generateCommissionManually(Long idBranchOffice, String dateInitial, String dateEnd) {
-        commissionRepository.generateCommission(idBranchOffice, dateInitial, dateEnd);
+        Long consistent = paymentRepository.getAmountConsistentPayments(idBranchOffice);
+        Long inconsistent = paymentRepository.getAmountInconsistentPayments(idBranchOffice);
+        commissionRepository.generateCommission(idBranchOffice, inconsistent, consistent, dateInitial, dateEnd);
     }
 
 }

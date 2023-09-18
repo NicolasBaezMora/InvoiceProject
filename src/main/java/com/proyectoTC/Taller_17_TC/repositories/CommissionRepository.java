@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
 public interface CommissionRepository extends JpaRepository<Commission, Long> {
 
     @Query(
-            value = "SELECT ID, VALUE, DATE_GEN, DATE_END_CALCULATION, DATE_INITIAL_CALCULATION, ID_BRANCH_OFFICE FROM COMMISSION C WHERE C.ID_BRANCH_OFFICE = :idBranchOffice",
+            value = "SELECT ID, VALUE, DATE_GEN, DATE_END_CALCULATION, DATE_INITIAL_CALCULATION, ID_BRANCH_OFFICE FROM COMMISSION C WHERE C.ID_BRANCH_OFFICE = :idBranchOffice ORDER BY C.ID",
             countQuery = "SELECT COUNT(1) FROM COMMISSION C WHERE C.ID_BRANCH_OFFICE = :idBranchOffice",
             nativeQuery = true
     )
@@ -26,11 +26,13 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
 
     @Modifying
     @Query(
-            value = "{CALL PKG_COMMISSION_CALC.CALC_COMMISSION(:idBranchOffice, TO_DATE(:dateInitial, 'yyyy-MM-dd'), TO_DATE(:dateEnd, 'yyyy-MM-dd'))}",
+            value = "{CALL PKG_COMMISSION_CALC.CALC_COMMISSION(:idBranchOffice, :consistent, :inconsistent, TO_DATE(:dateInitial, 'yyyy-MM-dd'), TO_DATE(:dateEnd, 'yyyy-MM-dd'))}",
             nativeQuery = true
     )
     void generateCommission(
             @Param(value = "idBranchOffice") Long idBranchOffice,
+            @Param(value = "consistent") Long consistent,
+            @Param(value = "inconsistent") Long inconsistent,
             @Param(value = "dateInitial") String dateInitial,
             @Param(value = "dateEnd") String dateEnd
     );

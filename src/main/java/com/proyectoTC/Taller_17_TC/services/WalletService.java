@@ -33,13 +33,13 @@ public class WalletService {
         return walletRepository.findAll();
     }
 
-    // **************************************** METODO JDBC TRANSACCIONAL ****************************************
+    // **************************************** METODO JPQL TRANSACCIONAL ****************************************
     @Transactional
     public void updateBalanceWithSave(Invoice invoiceSaved) {
         Wallet walletFound = walletRepository.findById(invoiceSaved.getWallet().getId())
                 .orElseThrow(() -> new NoDataFoundException("No se encontro billetera con el id:" + invoiceSaved.getWallet().getId()));
         Double newBalance = walletFound.getBalance() - invoiceSaved.getInvoicedValue();
-        jdbcTemplate.update("{CALL PKG_WALLET_TRANSACTION.UPDATE_BALANCE(?, ?)}", walletFound.getId(), newBalance);
+        walletRepository.updateWalletBalance(walletFound.getId(), newBalance);
     }
     // ************************************************************************************************************************
 

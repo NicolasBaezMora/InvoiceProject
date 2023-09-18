@@ -19,14 +19,14 @@ import javax.persistence.SequenceGenerator;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
 
     @Query(
-            value = "SELECT ID, INVOICED_VALUE, INVOICED_DATE, ID_WALLET, ID_STATE_INVOICE FROM INVOICE I WHERE I.ID_STATE_INVOICE = 51",
+            value = "SELECT ID, INVOICED_VALUE, INVOICED_DATE, ID_WALLET, ID_STATE_INVOICE FROM INVOICE I WHERE I.ID_STATE_INVOICE = 51 ORDER BY I.ID",
             countQuery = "SELECT COUNT(1) FROM INVOICE I WHERE I.ID_STATE_INVOICE = 51",
             nativeQuery = true
     )
     Page<Invoice> getPendingInvoices(Pageable page);
 
     @Query(
-            value = "SELECT ID, INVOICED_VALUE, INVOICED_DATE, ID_WALLET, ID_STATE_INVOICE FROM INVOICE I WHERE I.ID_STATE_INVOICE = 1",
+            value = "SELECT ID, INVOICED_VALUE, INVOICED_DATE, ID_WALLET, ID_STATE_INVOICE FROM INVOICE I WHERE I.ID_STATE_INVOICE = 1 ORDER BY I.ID",
             countQuery = "SELECT COUNT(1) FROM INVOICE I WHERE I.ID_STATE_INVOICE = 1",
             nativeQuery = true
     )

@@ -30,11 +30,11 @@ public class PaymentController {
     @GetMapping(value = "/consistent")
     public ResponseEntity<WrapperResponse<ResponseData<PaymentDTO>>> getConsistentPayments(
             @RequestParam(value = "hash") String hash,
-            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page
+            //@RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<Payment> paymentPage = paymentService.getAllConsistentPayments(pageable, hash);
 
         ResponseData<PaymentDTO> responseData = new ResponseData<>();
@@ -54,10 +54,10 @@ public class PaymentController {
     @GetMapping(value = "/inconsistent")
     public ResponseEntity<WrapperResponse<ResponseData<PaymentDTO>>> getInconsistentPayments(
             @RequestParam(value = "hash") String hash,
-            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page
+            //@RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, 10);
         Page<Payment> paymentPage = paymentService.getAllInconsistentPayments(pageable, hash);
 
         ResponseData<PaymentDTO> responseData = new ResponseData<>();
