@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.proyectoTC.Taller_17_TC.converters.CommissionConverterTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-03-26T21:51:54" hostname="SB00144823" time="0.006">
+  <properties/>
+  <testcase name="testFromEntityNull()" classname="com.proyectoTC.Taller_17_TC.converters.CommissionConverterTest" time="0.001"/>
+  <testcase name="testFromDTO()" classname="com.proyectoTC.Taller_17_TC.converters.CommissionConverterTest" time="0.002"/>
+  <testcase name="testFromDTONull()" classname="com.proyectoTC.Taller_17_TC.converters.CommissionConverterTest" time="0.001"/>
+  <testcase name="testFromEntity()" classname="com.proyectoTC.Taller_17_TC.converters.CommissionConverterTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

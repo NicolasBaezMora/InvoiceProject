@@ -1,7 +1,10 @@
 package com.proyectoTC.Taller_17_TC.controllers;
 
 import com.proyectoTC.Taller_17_TC.converters.CommissionConverter;
+import com.proyectoTC.Taller_17_TC.dtos.CommissionDTO;
 import com.proyectoTC.Taller_17_TC.models.Commission;
+import com.proyectoTC.Taller_17_TC.response_models.ResponseData;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import com.proyectoTC.Taller_17_TC.services.CommissionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -46,20 +50,20 @@ public class CommissionControllerTest {
         Page<Commission> page = new PageImpl<>(buildCommissionsList(), pageable, 10);
         when(commissionService.getAllCommissionsByBranchOffice(pageable, hash)).thenReturn(page);
 
-        var response = commissionController.getCommissions(hash, 0);
+        ResponseEntity<WrapperResponse<ResponseData<CommissionDTO>>> response = commissionController.getCommissions(hash, 0);
         assertNotNull(response);
     }
 
     @Test
     void shouldGetCommissionsByDateRange() {
         when(commissionService.getAllCommissionsByBranchOfficeAndDateRange("", "", hash)).thenReturn(buildCommissionsList());
-        var response = commissionController.getCommissionsByDateRange(hash, "", "");
+        ResponseEntity<WrapperResponse<List<CommissionDTO>>> response = commissionController.getCommissionsByDateRange(hash, "", "");
         assertNotNull(response);
     }
 
     @Test
     void shouldGenerateCommission() {
-        var response = commissionController.generateCommission(1L, "", "");
+        ResponseEntity<WrapperResponse<Object>> response = commissionController.generateCommission(1L, "", "");
         assertNotNull(response);
     }
 

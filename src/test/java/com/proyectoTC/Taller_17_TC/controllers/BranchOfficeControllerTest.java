@@ -1,7 +1,9 @@
 package com.proyectoTC.Taller_17_TC.controllers;
 
 import com.proyectoTC.Taller_17_TC.converters.BranchOfficeConverter;
+import com.proyectoTC.Taller_17_TC.dtos.BranchOfficeDTO;
 import com.proyectoTC.Taller_17_TC.models.BranchOffice;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import com.proyectoTC.Taller_17_TC.services.BranchOfficeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -38,7 +41,7 @@ public class BranchOfficeControllerTest {
     @Test
     void shouldGetBranchOffices() {
         when(branchOfficeService.getAllBranchOffices()).thenReturn(buiBranchOfficeList());
-        var responseEntity = controller.getBranchOffices();
+        ResponseEntity<WrapperResponse<List<BranchOfficeDTO>>> responseEntity = controller.getBranchOffices();
         assertNotNull(responseEntity);
     }
 

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InvoiceService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.services</a> &gt; <span class="el_source">InvoiceService.java</span></div><h1>InvoiceService.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.services;
+
+import ch.qos.logback.core.joran.conditional.IfAction;
+import com.proyectoTC.Taller_17_TC.exceptions.GeneralServiceException;
+import com.proyectoTC.Taller_17_TC.exceptions.NoDataFoundException;
+import com.proyectoTC.Taller_17_TC.exceptions.ValidateServiceException;
+import com.proyectoTC.Taller_17_TC.models.Invoice;
+import com.proyectoTC.Taller_17_TC.models.StateInvoice;
+import com.proyectoTC.Taller_17_TC.models.Wallet;
+import com.proyectoTC.Taller_17_TC.repositories.InvoiceRepository;
+import com.proyectoTC.Taller_17_TC.repositories.WalletRepository;
+import com.proyectoTC.Taller_17_TC.validators.InvoiceValidator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Service
+<span class="fc" id="L23">@Slf4j</span>
+<span class="fc" id="L24">public class InvoiceService {</span>
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private InvoiceValidator invoiceValidator;
+
+    public Page&lt;Invoice&gt; getAllPendingInvoices(Pageable pageable) {
+<span class="fc" id="L36">        return invoiceRepository.getPendingInvoices(pageable);</span>
+    }
+
+    public Page&lt;Invoice&gt; getAllPaidInvoices(Pageable pageable) {
+<span class="fc" id="L40">        return invoiceRepository.getPaidInvoices(pageable);</span>
+    }
+
+    public List&lt;Invoice&gt; getAllPendingInvoicesByDateRange(String dateStart, String dateEnd) {
+<span class="fc" id="L44">        return invoiceRepository.getPendingInvoicesByDateRange(dateStart, dateEnd);</span>
+    }
+
+    public List&lt;Invoice&gt; getAllPaidInvoicesByDateRange(String dateStart, String dateEnd) {
+<span class="fc" id="L48">        return invoiceRepository.getPaidInvoicesByDateRange(dateStart, dateEnd);</span>
+    }
+
+    /*public Invoice getInvoiceById(Long idInvoice) {
+        return invoiceRepository.findById(idInvoice)
+                .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro Factura con el id: &quot; + idInvoice));
+    }*/
+
+    @Transactional
+    public Invoice saveInvoice(Invoice invoice) {
+        try {
+<span class="fc bfc" id="L59" title="All 2 branches covered.">            if (invoice.getId() == null) {</span>
+<span class="fc" id="L60">                Wallet wallet = walletRepository.findById(invoice.getWallet().getId())</span>
+<span class="pc" id="L61">                        .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro billetera asociada la factura&quot;));</span>
+<span class="fc" id="L62">                Double balanceWallet = wallet.getBalance();</span>
+
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">                if (balanceWallet &gt; 0) {</span>
+<span class="fc" id="L65">                    double diff = Math.abs(balanceWallet - invoice.getInvoicedValue());</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">                    if (balanceWallet &gt;= invoice.getInvoicedValue()) {</span>
+                        // Actualizamos el balance de la cartera
+<span class="fc" id="L68">                        wallet.setBalance(diff);</span>
+<span class="fc" id="L69">                        walletRepository.save(wallet);</span>
+
+<span class="fc" id="L71">                        invoice.setInvoicedValue(0D);</span>
+<span class="fc" id="L72">                        invoice.setStateInvoice(StateInvoice.builder().id(1L).build());</span>
+                    } else {
+                        // Actualizamos el balance de la cartera
+<span class="fc" id="L75">                        wallet.setBalance(0D);</span>
+<span class="fc" id="L76">                        walletRepository.save(wallet);</span>
+
+<span class="fc" id="L78">                        invoice.setInvoicedValue(diff);</span>
+                    }
+                }
+<span class="fc" id="L81">                invoiceValidator.saveInvoice(invoice);</span>
+<span class="fc" id="L82">                return invoiceRepository.save(invoice);</span>
+            }
+<span class="fc" id="L84">            Invoice invoiceToUpdate = invoiceRepository.findById(invoice.getId())</span>
+<span class="pc" id="L85">                    .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro Factura con el id: &quot; + invoice.getId()));</span>
+
+<span class="fc" id="L87">            invoiceToUpdate.setInvoicedValue(invoice.getInvoicedValue());</span>
+<span class="fc" id="L88">            invoiceToUpdate.setInvoicedDate(invoice.getInvoicedDate());</span>
+
+<span class="fc" id="L90">            return invoiceRepository.save(invoiceToUpdate);</span>
+<span class="fc" id="L91">        } catch (ValidateServiceException | NoDataFoundException e) {</span>
+<span class="fc" id="L92">            log.error(e.getMessage());</span>
+<span class="fc" id="L93">            throw e;</span>
+<span class="fc" id="L94">        } catch (Exception e) {</span>
+<span class="fc" id="L95">            log.error(e.getMessage());</span>
+<span class="fc" id="L96">            throw new GeneralServiceException(e);</span>
+        }
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

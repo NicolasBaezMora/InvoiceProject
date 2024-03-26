@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.proyectoTC.Taller_17_TC.validators.InvoiceValidatorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-03-26T21:52:09" hostname="SB00144823" time="0.013">
+  <properties/>
+  <testcase name="testSaveInvoiceInvoicedValueNull()" classname="com.proyectoTC.Taller_17_TC.validators.InvoiceValidatorTest" time="0.002"/>
+  <testcase name="testSaveInvoiceStateInvoiceValueNull()" classname="com.proyectoTC.Taller_17_TC.validators.InvoiceValidatorTest" time="0.002"/>
+  <testcase name="testSaveInvoiceWalletValueNull()" classname="com.proyectoTC.Taller_17_TC.validators.InvoiceValidatorTest" time="0.002"/>
+  <testcase name="testFindStateInvoice()" classname="com.proyectoTC.Taller_17_TC.validators.InvoiceValidatorTest" time="0.002"/>
+  <testcase name="testSaveInvoice()" classname="com.proyectoTC.Taller_17_TC.validators.InvoiceValidatorTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

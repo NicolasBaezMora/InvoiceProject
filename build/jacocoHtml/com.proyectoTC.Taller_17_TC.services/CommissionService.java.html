@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommissionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.services</a> &gt; <span class="el_source">CommissionService.java</span></div><h1>CommissionService.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.services;
+
+import com.proyectoTC.Taller_17_TC.exceptions.NoDataFoundException;
+import com.proyectoTC.Taller_17_TC.models.BranchOffice;
+import com.proyectoTC.Taller_17_TC.models.Commission;
+import com.proyectoTC.Taller_17_TC.repositories.BranchOfficeRepository;
+import com.proyectoTC.Taller_17_TC.repositories.CommissionRepository;
+import com.proyectoTC.Taller_17_TC.repositories.PaymentRepository;
+import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Service
+<span class="fc" id="L19">public class CommissionService {</span>
+
+    @Autowired
+    private CommissionRepository commissionRepository;
+
+    @Autowired
+    private BranchOfficeRepository branchOfficeRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    public Page&lt;Commission&gt; getAllCommissionsByBranchOffice(Pageable pageable, String hash) {
+<span class="fc" id="L31">        BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)</span>
+<span class="fc" id="L32">                .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro entidad con el hash: &quot; + hash));</span>
+<span class="fc" id="L33">        return commissionRepository.getCommissions(pageable, branchOffice);</span>
+    }
+
+    public List&lt;Commission&gt; getAllCommissionsByBranchOfficeAndDateRange(String dateStart, String dateEnd, String hash) {
+<span class="fc" id="L37">        BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)</span>
+<span class="fc" id="L38">                .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro entidad con el hash: &quot; + hash));</span>
+<span class="fc" id="L39">        return commissionRepository.getCommissionsByDateRange(dateStart, dateEnd, branchOffice.getId());</span>
+    }
+
+    @Transactional
+    public void generateCommissionManually(Long idBranchOffice, String dateInitial, String dateEnd) {
+<span class="fc" id="L44">        Long consistent = paymentRepository.getAmountConsistentPayments(idBranchOffice);</span>
+<span class="fc" id="L45">        Long inconsistent = paymentRepository.getAmountInconsistentPayments(idBranchOffice);</span>
+<span class="fc" id="L46">        commissionRepository.generateCommission(idBranchOffice, inconsistent, consistent, dateInitial, dateEnd);</span>
+<span class="fc" id="L47">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

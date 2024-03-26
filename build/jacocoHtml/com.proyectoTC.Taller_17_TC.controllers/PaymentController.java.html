@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.controllers</a> &gt; <span class="el_source">PaymentController.java</span></div><h1>PaymentController.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.controllers;
+
+import com.proyectoTC.Taller_17_TC.converters.PaymentConverter;
+import com.proyectoTC.Taller_17_TC.dtos.PaymentDTO;
+import com.proyectoTC.Taller_17_TC.models.Payment;
+import com.proyectoTC.Taller_17_TC.response_models.ResponseData;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
+import com.proyectoTC.Taller_17_TC.services.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(path = &quot;/payment&quot;)
+<span class="fc" id="L24">public class PaymentController {</span>
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
+    private PaymentConverter paymentConverter;
+
+    @GetMapping(value = &quot;/consistent&quot;)
+    public ResponseEntity&lt;WrapperResponse&lt;ResponseData&lt;PaymentDTO&gt;&gt;&gt; getConsistentPayments(
+            @RequestParam(value = &quot;hash&quot;) String hash,
+            @RequestParam(value = &quot;page&quot;, required = false, defaultValue = &quot;0&quot;) int page
+            //@RequestParam(value = &quot;size&quot;, required = false, defaultValue = &quot;10&quot;) int size
+    ) {
+
+<span class="fc" id="L39">        Pageable pageable = PageRequest.of(page, 10);</span>
+<span class="fc" id="L40">        Page&lt;Payment&gt; paymentPage = paymentService.getAllConsistentPayments(pageable, hash);</span>
+
+<span class="fc" id="L42">        ResponseData&lt;PaymentDTO&gt; responseData = new ResponseData&lt;&gt;();</span>
+
+<span class="fc" id="L44">        responseData.setTotalPages(paymentPage.getTotalPages());</span>
+<span class="fc" id="L45">        responseData.setTotal(paymentPage.getTotalElements());</span>
+<span class="fc" id="L46">        responseData.setData(paymentConverter.fromEntity(paymentPage.getContent()));</span>
+<span class="fc" id="L47">        responseData.setCurrentPage(paymentPage.getNumber());</span>
+
+<span class="fc" id="L49">        return new WrapperResponse&lt;&gt;(</span>
+                true,
+                responseData,
+                &quot;success&quot;
+<span class="fc" id="L53">        ).createResponse(HttpStatus.OK);</span>
+    }
+
+    @GetMapping(value = &quot;/inconsistent&quot;)
+    public ResponseEntity&lt;WrapperResponse&lt;ResponseData&lt;PaymentDTO&gt;&gt;&gt; getInconsistentPayments(
+            @RequestParam(value = &quot;hash&quot;) String hash,
+            @RequestParam(value = &quot;page&quot;, required = false, defaultValue = &quot;0&quot;) int page
+            //@RequestParam(value = &quot;size&quot;, required = false, defaultValue = &quot;10&quot;) int size
+    ) {
+<span class="fc" id="L62">        Pageable pageable = PageRequest.of(page, 10);</span>
+<span class="fc" id="L63">        Page&lt;Payment&gt; paymentPage = paymentService.getAllInconsistentPayments(pageable, hash);</span>
+
+<span class="fc" id="L65">        ResponseData&lt;PaymentDTO&gt; responseData = new ResponseData&lt;&gt;();</span>
+
+<span class="fc" id="L67">        responseData.setTotalPages(paymentPage.getTotalPages());</span>
+<span class="fc" id="L68">        responseData.setTotal(paymentPage.getTotalElements());</span>
+<span class="fc" id="L69">        responseData.setData(paymentConverter.fromEntity(paymentPage.getContent()));</span>
+<span class="fc" id="L70">        responseData.setCurrentPage(paymentPage.getNumber());</span>
+
+<span class="fc" id="L72">        return new WrapperResponse&lt;&gt;(</span>
+                true,
+                responseData,
+                &quot;success&quot;
+<span class="fc" id="L76">        ).createResponse(HttpStatus.OK);</span>
+    }
+
+
+    @GetMapping(value = &quot;/consistentDateRange&quot;)
+    public ResponseEntity&lt;WrapperResponse&lt;List&lt;PaymentDTO&gt;&gt;&gt; getConsistentPaymentsByDateRange(
+            @RequestParam(value = &quot;hash&quot;) String hash,
+            @RequestParam(value = &quot;dateStart&quot;) String dateStart,
+            @RequestParam(value = &quot;dateEnd&quot;) String dateEnd
+    ) {
+<span class="fc" id="L86">        return new WrapperResponse&lt;&gt;(</span>
+                true,
+<span class="fc" id="L88">                paymentConverter.fromEntity(paymentService.getAllConsistentPaymentsByDateRange(hash, dateStart, dateEnd)),</span>
+                &quot;success&quot;
+<span class="fc" id="L90">        ).createResponse(HttpStatus.OK);</span>
+
+    }
+
+    @GetMapping(value = &quot;/inconsistentDateRange&quot;)
+    public ResponseEntity&lt;WrapperResponse&lt;List&lt;PaymentDTO&gt;&gt;&gt; getInconsistentPaymentsByDateRange(
+            @RequestParam(value = &quot;hash&quot;) String hash,
+            @RequestParam(value = &quot;dateStart&quot;) String dateStart,
+            @RequestParam(value = &quot;dateEnd&quot;) String dateEnd
+    ) {
+<span class="fc" id="L100">        return new WrapperResponse&lt;&gt;(</span>
+                true,
+<span class="fc" id="L102">                paymentConverter.fromEntity(paymentService.getAllInconsistentPaymentsByDateRange(hash, dateStart, dateEnd)),</span>
+                &quot;success&quot;
+<span class="fc" id="L104">        ).createResponse(HttpStatus.OK);</span>
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

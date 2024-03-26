@@ -1,6 +1,7 @@
 package com.proyectoTC.Taller_17_TC.controllers;
 
 import com.proyectoTC.Taller_17_TC.response_models.ResponseFile;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import com.proyectoTC.Taller_17_TC.services.FileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +38,7 @@ public class FileControllerTest {
         byte[] content = "content".getBytes();
         MultipartFile file = new MockMultipartFile("test", "text.pdf", "text/plain", content);
         when(fileService.loadFile(file, hash)).thenReturn(buildResponseFile());
-        var response = fileController.uploadFile(file, hash);
+        ResponseEntity<WrapperResponse<ResponseFile>> response = fileController.uploadFile(file, hash);
         assertNotNull(response);
     }
 

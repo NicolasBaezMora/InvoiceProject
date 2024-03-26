@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WalletService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.services</a> &gt; <span class="el_source">WalletService.java</span></div><h1>WalletService.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.services;
+
+import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
+import com.proyectoTC.Taller_17_TC.dtos.WalletDTO;
+import com.proyectoTC.Taller_17_TC.exceptions.NoDataFoundException;
+import com.proyectoTC.Taller_17_TC.exceptions.ValidateServiceException;
+import com.proyectoTC.Taller_17_TC.models.Client;
+import com.proyectoTC.Taller_17_TC.models.Invoice;
+import com.proyectoTC.Taller_17_TC.models.Wallet;
+import com.proyectoTC.Taller_17_TC.repositories.ClientRepository;
+import com.proyectoTC.Taller_17_TC.repositories.WalletRepository;
+import com.proyectoTC.Taller_17_TC.utils.WalletRowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Service
+<span class="fc" id="L21">public class WalletService {</span>
+
+    @Autowired
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    public List&lt;Wallet&gt; getAllWallets(){
+<span class="fc" id="L33">        return walletRepository.findAll();</span>
+    }
+
+    // **************************************** METODO JPQL TRANSACCIONAL ****************************************
+    @Transactional
+    public void updateBalanceWithSave(Invoice invoiceSaved) {
+<span class="fc" id="L39">        Wallet walletFound = walletRepository.findById(invoiceSaved.getWallet().getId())</span>
+<span class="fc" id="L40">                .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro billetera con el id:&quot; + invoiceSaved.getWallet().getId()));</span>
+<span class="fc" id="L41">        Double newBalance = walletFound.getBalance() - invoiceSaved.getInvoicedValue();</span>
+<span class="fc" id="L42">        walletRepository.updateWalletBalance(walletFound.getId(), newBalance);</span>
+<span class="fc" id="L43">    }</span>
+    // ************************************************************************************************************************
+
+    public Wallet getWallet(String email, String hash) {
+<span class="fc" id="L47">        Client client =  clientRepository.findByEmail(email)</span>
+<span class="fc" id="L48">                .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro cliente&quot;));</span>
+
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (!client.getHash().equals(hash)) throw new ValidateServiceException(&quot;El hash del cliente no es valido&quot;);</span>
+
+
+<span class="fc" id="L53">        String sql = &quot;SELECT ID, BALANCE, ID_CLIENT FROM WALLET W WHERE W.ID_CLIENT = &quot; + client.getId();</span>
+<span class="fc" id="L54">        return jdbcTemplate.query(sql, new WalletRowMapper(client)).stream().findFirst()</span>
+<span class="fc" id="L55">                .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro billetera ligado al cliente&quot;));</span>
+
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.proyectoTC.Taller_17_TC.controllers.InvoiceControllerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-03-26T21:51:54" hostname="SB00144823" time="0.066">
+  <properties/>
+  <testcase name="shouldGetPendingInvoices()" classname="com.proyectoTC.Taller_17_TC.controllers.InvoiceControllerTest" time="0.053"/>
+  <testcase name="shouldGetPaidInvoicesByDateRange()" classname="com.proyectoTC.Taller_17_TC.controllers.InvoiceControllerTest" time="0.005"/>
+  <testcase name="shouldSaveInvoice()" classname="com.proyectoTC.Taller_17_TC.controllers.InvoiceControllerTest" time="0.002"/>
+  <testcase name="shouldGetPaidInvoices()" classname="com.proyectoTC.Taller_17_TC.controllers.InvoiceControllerTest" time="0.002"/>
+  <testcase name="shouldGetPendingInvoicesByDateRange()" classname="com.proyectoTC.Taller_17_TC.controllers.InvoiceControllerTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

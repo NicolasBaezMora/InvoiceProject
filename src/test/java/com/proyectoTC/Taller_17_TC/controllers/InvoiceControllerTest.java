@@ -3,6 +3,8 @@ package com.proyectoTC.Taller_17_TC.controllers;
 import com.proyectoTC.Taller_17_TC.converters.InvoiceConverter;
 import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
 import com.proyectoTC.Taller_17_TC.models.Invoice;
+import com.proyectoTC.Taller_17_TC.response_models.ResponseData;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import com.proyectoTC.Taller_17_TC.services.InvoiceService;
 import com.proyectoTC.Taller_17_TC.services.WalletService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -52,7 +55,7 @@ public class InvoiceControllerTest {
         Page<Invoice> page = new PageImpl<>(buildInvoicesList(), pageable, 10);
         when(invoiceService.getAllPendingInvoices(pageable)).thenReturn(page);
 
-        var response = invoiceController.getPendingInvoices(0);
+        ResponseEntity<WrapperResponse<ResponseData<InvoiceDTO>>> response = invoiceController.getPendingInvoices(0);
         assertNotNull(response);
 
     }
@@ -63,28 +66,28 @@ public class InvoiceControllerTest {
         Page<Invoice> page = new PageImpl<>(buildInvoicesList(), pageable, 10);
         when(invoiceService.getAllPaidInvoices(pageable)).thenReturn(page);
 
-        var response = invoiceController.getPaidInvoices(0);
+        ResponseEntity<WrapperResponse<ResponseData<InvoiceDTO>>> response = invoiceController.getPaidInvoices(0);
         assertNotNull(response);
     }
 
     @Test
     void shouldGetPendingInvoicesByDateRange() {
         when(invoiceService.getAllPendingInvoicesByDateRange(anyString(), anyString())).thenReturn(buildInvoicesList());
-        var response = invoiceController.getPendingInvoicesByDateRange(anyString(), anyString());
+        ResponseEntity<WrapperResponse<List<InvoiceDTO>>> response = invoiceController.getPendingInvoicesByDateRange(anyString(), anyString());
         assertNotNull(response);
     }
 
     @Test
     void shouldGetPaidInvoicesByDateRange() {
         when(invoiceService.getAllPaidInvoicesByDateRange(anyString(), anyString())).thenReturn(buildInvoicesList());
-        var response = invoiceController.getPaidInvoicesByDateRange(anyString(), anyString());
+        ResponseEntity<WrapperResponse<List<InvoiceDTO>>> response = invoiceController.getPaidInvoicesByDateRange(anyString(), anyString());
         assertNotNull(response);
     }
 
     @Test
     void shouldSaveInvoice() {
         when(invoiceService.saveInvoice(buildInvoice())).thenReturn(buildInvoice());
-        var response = invoiceController.createInvoice(buildInvoice());
+        ResponseEntity<WrapperResponse<InvoiceDTO>> response = invoiceController.createInvoice(buildInvoice());
         assertNotNull(response);
     }
 

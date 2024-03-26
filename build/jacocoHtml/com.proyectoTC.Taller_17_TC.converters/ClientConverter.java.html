@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.converters</a> &gt; <span class="el_source">ClientConverter.java</span></div><h1>ClientConverter.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.converters;
+
+import com.proyectoTC.Taller_17_TC.dtos.ClientDTO;
+import com.proyectoTC.Taller_17_TC.models.Client;
+import com.proyectoTC.Taller_17_TC.models.Wallet;
+
+<span class="fc" id="L7">public class ClientConverter extends AbstractConverter&lt;Client, ClientDTO&gt; {</span>
+    @Override
+    public Client fromDTO(ClientDTO dto) {
+<span class="fc bfc" id="L10" title="All 2 branches covered.">        if (dto == null) return null;</span>
+<span class="fc" id="L11">        return Client.builder()</span>
+<span class="fc" id="L12">                .id(dto.getId())</span>
+<span class="fc" id="L13">                .name(dto.getName())</span>
+<span class="fc" id="L14">                .billingAddress(dto.getBillingAddress())</span>
+<span class="fc" id="L15">                .email(dto.getEmail())</span>
+<span class="fc" id="L16">                .phone(dto.getPhone())</span>
+                //.wallet(Wallet.builder().id(dto.getWallet().getId()).balance(dto.getWallet().getBalance()).build())
+<span class="fc" id="L18">                .hash(dto.getHash())</span>
+<span class="fc" id="L19">                .build();</span>
+    }
+
+    @Override
+    public ClientDTO fromEntity(Client entity) {
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (entity == null) return null;</span>
+<span class="fc" id="L25">        return ClientDTO.builder()</span>
+<span class="fc" id="L26">                .id(entity.getId())</span>
+<span class="fc" id="L27">                .name(entity.getName())</span>
+<span class="fc" id="L28">                .billingAddress(entity.getBillingAddress())</span>
+<span class="fc" id="L29">                .email(entity.getEmail())</span>
+<span class="fc" id="L30">                .phone(entity.getPhone())</span>
+                //.wallet(Wallet.builder().id(entity.getWallet().getId()).balance(entity.getWallet().getBalance()).build())
+<span class="fc" id="L32">                .hash(entity.getHash())</span>
+<span class="fc" id="L33">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

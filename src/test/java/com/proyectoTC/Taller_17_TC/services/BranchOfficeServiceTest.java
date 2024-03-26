@@ -35,7 +35,7 @@ public class BranchOfficeServiceTest {
     @Test
     void shouldGetAllBranchOffices() {
         when(branchOfficeRepository.findAll()).thenReturn(buildListBranchOffice());
-        var branchOffices = branchOfficeService.getAllBranchOffices();
+        List<BranchOffice> branchOffices = branchOfficeService.getAllBranchOffices();
         assertNotNull(branchOffices);
     }
 

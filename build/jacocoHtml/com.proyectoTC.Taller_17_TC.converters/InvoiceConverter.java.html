@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InvoiceConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.converters</a> &gt; <span class="el_source">InvoiceConverter.java</span></div><h1>InvoiceConverter.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.converters;
+
+import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
+import com.proyectoTC.Taller_17_TC.models.Invoice;
+import org.springframework.beans.factory.annotation.Autowired;
+
+<span class="fc" id="L7">public class InvoiceConverter extends AbstractConverter&lt;Invoice, InvoiceDTO&gt; {</span>
+
+    @Autowired
+    private WalletConverter walletConverter;
+
+    @Override
+    public Invoice fromDTO(InvoiceDTO dto) {
+<span class="fc bfc" id="L14" title="All 2 branches covered.">        if (dto == null) return null;</span>
+<span class="fc" id="L15">        return Invoice.builder()</span>
+<span class="fc" id="L16">                .id(dto.getId())</span>
+<span class="fc" id="L17">                .invoicedValue(dto.getInvoicedValue())</span>
+<span class="fc" id="L18">                .invoicedDate(dto.getInvoicedDate())</span>
+<span class="fc" id="L19">                .wallet(walletConverter.fromDTO(dto.getWalletDTO()))</span>
+<span class="fc" id="L20">                .stateInvoice(dto.getStateInvoice())</span>
+<span class="fc" id="L21">                .build();</span>
+    }
+
+    @Override
+    public InvoiceDTO fromEntity(Invoice entity) {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if (entity == null) return null;</span>
+<span class="fc" id="L27">        return InvoiceDTO.builder()</span>
+<span class="fc" id="L28">                .id(entity.getId())</span>
+<span class="fc" id="L29">                .invoicedValue(entity.getInvoicedValue())</span>
+<span class="fc" id="L30">                .invoicedDate(entity.getInvoicedDate())</span>
+<span class="fc" id="L31">                .walletDTO(walletConverter.fromEntity(entity.getWallet()))</span>
+<span class="fc" id="L32">                .stateInvoice(entity.getStateInvoice())</span>
+<span class="fc" id="L33">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

@@ -59,7 +59,7 @@ public class CommissionServiceTest {
         BranchOffice bo = BranchOffice.builder().id(1L).build();
         when(branchOfficeRepository.findByHash(hash)).thenReturn(Optional.of(bo));
         when(commissionRepository.getCommissions(page, bo)).thenReturn(buildPageCommission());
-        var commissions = commissionService.getAllCommissionsByBranchOffice(page, hash);
+        Page<Commission> commissions = commissionService.getAllCommissionsByBranchOffice(page, hash);
         assertNotNull(commissions);
     }
 
@@ -80,7 +80,7 @@ public class CommissionServiceTest {
         BranchOffice bo = BranchOffice.builder().id(1L).build();
         when(branchOfficeRepository.findByHash(hash)).thenReturn(Optional.of(bo));
         when(commissionRepository.getCommissionsByDateRange("", "", bo.getId())).thenReturn(buildCommissions());
-        var commissions = commissionService.getAllCommissionsByBranchOfficeAndDateRange("", "", hash);
+        List<Commission> commissions = commissionService.getAllCommissionsByBranchOfficeAndDateRange("", "", hash);
         assertNotNull(commissions);
     }
 

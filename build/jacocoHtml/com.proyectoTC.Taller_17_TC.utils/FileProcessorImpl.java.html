@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileProcessorImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.utils</a> &gt; <span class="el_source">FileProcessorImpl.java</span></div><h1>FileProcessorImpl.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.utils;
+
+import com.proyectoTC.Taller_17_TC.exceptions.NoDataFoundException;
+import com.proyectoTC.Taller_17_TC.exceptions.ValidateServiceException;
+import com.proyectoTC.Taller_17_TC.models.BranchOffice;
+import com.proyectoTC.Taller_17_TC.models.Invoice;
+import com.proyectoTC.Taller_17_TC.models.StateInvoice;
+import com.proyectoTC.Taller_17_TC.models.Wallet;
+import com.proyectoTC.Taller_17_TC.repositories.BranchOfficeRepository;
+import com.proyectoTC.Taller_17_TC.repositories.InvoiceRepository;
+import com.proyectoTC.Taller_17_TC.repositories.PaymentRepository;
+import com.proyectoTC.Taller_17_TC.repositories.WalletRepository;
+import com.proyectoTC.Taller_17_TC.response_models.ResponseFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.Optional;
+
+@Component
+<span class="fc" id="L24">public class FileProcessorImpl implements FileProcessor {</span>
+
+
+    @Autowired
+    private BranchOfficeRepository branchOfficeRepository;
+
+    @Autowired
+    private InvoiceRepository invoiceRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private WalletRepository walletRepository;
+
+    @Autowired
+    private FileLoaderImpl fileLoader;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Override
+    public ResponseFile processDataFile(MultipartFile file, String hash) throws IOException {
+        // Cargo en memoria los datos  archivo
+<span class="fc" id="L48">        BufferedReader bufferData = fileLoader.getData(file);</span>
+
+        // **********************************************************************************************
+<span class="fc" id="L51">        long cons = 0L;</span>
+<span class="fc" id="L52">        long incons = 0L;</span>
+        // Leo la primera linea del archivo para validar la entidad y el hash (extraer datos de la cabecera)
+<span class="fc" id="L54">        String line = bufferData.readLine();</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (line == null) throw new ValidateServiceException(&quot;Estructura del archivo invalida&quot;);</span>
+
+<span class="nc" id="L57">        long idBranchOffice = Long.parseLong(line.substring(2));</span>
+
+<span class="nc" id="L59">        BranchOffice branchOffice = branchOfficeRepository.findById(idBranchOffice)</span>
+<span class="nc" id="L60">                .orElseThrow(() -&gt; new NoDataFoundException(&quot;No se encontro la entidad registrada en el archivo de informaciÃ³n con id: &quot; + idBranchOffice));</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (!branchOffice.getHash().equals(hash)) throw new ValidateServiceException(&quot;El hash de la entidad '&quot; + branchOffice.getName() + &quot;' no es valido&quot;);</span>
+        // **********************************************************************************************
+
+        // Empiezo a leer los datos del archivo de la segunda linea para abajo
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        while ((line = bufferData.readLine()) != null) {</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            if (line.length() &gt; 0) {</span>
+<span class="nc" id="L67">                String[] arrayData = line.split(&quot;;&quot;);</span>
+<span class="nc" id="L68">                int type = Integer.parseInt(arrayData[0]);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                if (type == 2) {</span>
+                    // Extraigo los datos de la linea leida
+<span class="nc" id="L71">                    String dateDetail = arrayData[1];</span>
+<span class="nc" id="L72">                    Long idInvoice = Long.parseLong(arrayData[2]);</span>
+<span class="nc" id="L73">                    double valuePay = Double.parseDouble(arrayData[3]);</span>
+<span class="nc" id="L74">                    int typePay = Integer.parseInt(arrayData[4]);</span>
+                    // **********************************************************************************************
+
+                    // Reviso si existe la factura
+<span class="nc" id="L78">                    Optional&lt;Invoice&gt; invoiceFound = invoiceRepository.findById(idInvoice);</span>
+<span class="nc bnc" id="L79" title="All 2 branches missed.">                    if (!invoiceFound.isPresent()) {</span>
+<span class="nc" id="L80">                        generateInconsistentPayment(valuePay, dateDetail, typePay, idBranchOffice, null);</span>
+
+<span class="nc" id="L82">                        incons++;</span>
+
+<span class="nc" id="L84">                        continue;</span>
+                    }
+                    // **********************************************************************************************
+
+                    // Si existe la factura extraigo los datos de esta y proceso la informaciÃ³n
+<span class="nc" id="L89">                    Invoice invoiceToPay = invoiceFound.get();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">                    if (invoiceToPay.getStateInvoice().getState().equals(&quot;PENDIENTE&quot;)) {</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                        if (invoiceToPay.getInvoicedValue() == valuePay){</span>
+
+<span class="nc" id="L93">                            generateConsistentPayment(valuePay, dateDetail, typePay, idBranchOffice, idInvoice);</span>
+
+<span class="nc" id="L95">                            cons++;</span>
+
+<span class="nc" id="L97">                            invoiceToPay.setInvoicedValue(0D);</span>
+<span class="nc" id="L98">                            invoiceToPay.setStateInvoice(StateInvoice.builder().id(1L).build());</span>
+<span class="nc" id="L99">                            invoiceRepository.save(invoiceToPay);</span>
+
+<span class="nc" id="L101">                            updateWallet(invoiceToPay, valuePay);</span>
+                        } else {
+<span class="nc" id="L103">                            generateInconsistentPayment(valuePay, dateDetail, typePay, idBranchOffice, idInvoice);</span>
+
+<span class="nc" id="L105">                            incons++;</span>
+
+                        }
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                    } else if (invoiceToPay.getStateInvoice().getState().equals(&quot;PAGADO&quot;)) {</span>
+<span class="nc" id="L109">                        generateConsistentPayment(valuePay, dateDetail, typePay, idBranchOffice, idInvoice);</span>
+
+<span class="nc" id="L111">                        cons++;</span>
+
+<span class="nc" id="L113">                        updateWallet(invoiceToPay, valuePay);</span>
+                    }
+                    // **********************************************************************************************
+
+                }
+<span class="nc" id="L118">            }</span>
+        }
+<span class="nc" id="L120">        bufferData.close();</span>
+<span class="nc" id="L121">        return new ResponseFile(cons, incons);</span>
+
+    }
+
+
+    // **************************************** METODO JDBC TRANSACCIONAL ****************************************
+
+    private void updateWallet(Invoice invoicePaid, Double valuePay) {
+<span class="fc" id="L129">        Wallet walletFound = walletRepository.findById(invoicePaid.getWallet().getId())</span>
+<span class="pc" id="L130">                .orElseThrow(() -&gt; new ValidateServiceException(&quot;Billetera no encontrada&quot;));</span>
+<span class="fc" id="L131">        walletFound.setBalance(walletFound.getBalance() + valuePay);</span>
+<span class="fc" id="L132">        walletRepository.save(walletFound);</span>
+<span class="fc" id="L133">    }</span>
+    private void generateInconsistentPayment(
+            double valuePay,
+            String dateDetail,
+            int typePay,
+            Long idBranchOffice,
+            Long idInvoice
+    ) {
+<span class="fc" id="L141">        jdbcTemplate.update(</span>
+                &quot;{CALL PKG_PAYMENT_TRANSACTION.CREATE_PAYMENT(?, ?, ?, ?, ?, ?)}&quot;,
+<span class="fc" id="L143">                valuePay,</span>
+<span class="fc" id="L144">                convertDate(dateDetail),</span>
+<span class="fc" id="L145">                PaymentType.getTypePay(typePay),</span>
+                idBranchOffice,
+                idInvoice,
+<span class="fc" id="L148">                51L</span>
+        );
+
+<span class="fc" id="L151">    }</span>
+
+    private void generateConsistentPayment(
+            double valuePay,
+            String dateDetail,
+            int typePay,
+            Long idBranchOffice,
+            Long idInvoice
+    ){
+<span class="fc" id="L160">        jdbcTemplate.update(</span>
+                &quot;{CALL PKG_PAYMENT_TRANSACTION.CREATE_PAYMENT(?, ?, ?, ?, ?, ?)}&quot;,
+<span class="fc" id="L162">                valuePay,</span>
+<span class="fc" id="L163">                convertDate(dateDetail),</span>
+<span class="fc" id="L164">                PaymentType.getTypePay(typePay),</span>
+                idBranchOffice,
+                idInvoice,
+<span class="fc" id="L167">                1L</span>
+        );
+<span class="fc" id="L169">    }</span>
+
+    // ************************************************************************************************************************
+
+
+    private String convertDate(String date) {
+<span class="fc" id="L175">        String year = date.substring(0, 4);</span>
+<span class="fc" id="L176">        String month = date.substring(4, 6);</span>
+<span class="fc" id="L177">        String day = date.substring(6);</span>
+
+<span class="fc" id="L179">        return year + &quot;-&quot; + month + &quot;-&quot; + day;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

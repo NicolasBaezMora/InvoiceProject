@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2024-03-26T21:52:09" hostname="SB00144823" time="0.047">
+  <properties/>
+  <testcase name="shouldThrowNoDataFoundException2()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.002"/>
+  <testcase name="shouldThrowNoDataFoundException3()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.001"/>
+  <testcase name="shouldThrowNoDataFoundException4()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.001"/>
+  <testcase name="shouldGetAllConsistentPaymentsByDateRange()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.033"/>
+  <testcase name="shouldGetAllInconsistentPayments()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.002"/>
+  <testcase name="shouldGetAllConsistentPayments()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.002"/>
+  <testcase name="shouldThrowNoDataFoundException()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.002"/>
+  <testcase name="shouldGetAllInconsistentPaymentsByDateRange()" classname="com.proyectoTC.Taller_17_TC.services.PaymentServiceTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

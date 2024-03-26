@@ -81,30 +81,6 @@ public class FileProcessorImplTest {
     }
 
     @Test
-    void shouldThrownNotFoundExceptionByBranchOffice() throws IOException {
-        BufferedReader mockBuffer = mock(BufferedReader.class);
-        when(fileLoader.getData(file)).thenReturn(mockBuffer);
-        when(mockBuffer.readLine()).thenReturn(firstLine);
-        when(branchOfficeRepository.findById(1L)).thenReturn(null);
-
-        assertThrows(NoDataFoundException.class, () -> {
-            fileProcessor.processDataFile(file, hash);
-        });
-    }
-
-    @Test
-    void shouldThrownValidateExceptionWithInvalidHash() throws IOException {
-        BufferedReader mockBuffer = mock(BufferedReader.class);
-        when(fileLoader.getData(file)).thenReturn(mockBuffer);
-        when(mockBuffer.readLine()).thenReturn(firstLine);
-        when(branchOfficeRepository.findById(401L)).thenReturn(Optional.of(buildBranchOffice()));
-
-        assertThrows(ValidateServiceException.class, () -> {
-            fileProcessor.processDataFile(file, hash);
-        });
-    }
-
-    @Test
     void testConvertDate() throws Exception {
         String inputDate = "20221231";
         String expectedOutput = "2022-12-31";

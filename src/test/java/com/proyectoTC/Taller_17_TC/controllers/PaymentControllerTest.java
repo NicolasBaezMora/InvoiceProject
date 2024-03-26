@@ -1,7 +1,10 @@
 package com.proyectoTC.Taller_17_TC.controllers;
 
 import com.proyectoTC.Taller_17_TC.converters.PaymentConverter;
+import com.proyectoTC.Taller_17_TC.dtos.PaymentDTO;
 import com.proyectoTC.Taller_17_TC.models.Payment;
+import com.proyectoTC.Taller_17_TC.response_models.ResponseData;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import com.proyectoTC.Taller_17_TC.services.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -53,7 +57,7 @@ public class PaymentControllerTest {
         Page<Payment> page = new PageImpl<>(buildPaymentsList(), pageable, 10);
         when(paymentService.getAllConsistentPayments(pageable, hash)).thenReturn(page);
 
-        var response = paymentController.getConsistentPayments(hash, 0);
+        ResponseEntity<WrapperResponse<ResponseData<PaymentDTO>>> response = paymentController.getConsistentPayments(hash, 0);
         assertNotNull(response);
     }
 
@@ -64,7 +68,7 @@ public class PaymentControllerTest {
         Page<Payment> page = new PageImpl<>(buildPaymentsList(), pageable, 10);
         when(paymentService.getAllInconsistentPayments(pageable, hash)).thenReturn(page);
 
-        var response = paymentController.getInconsistentPayments(hash, 0);
+        ResponseEntity<WrapperResponse<ResponseData<PaymentDTO>>> response = paymentController.getInconsistentPayments(hash, 0);
         assertNotNull(response);
     }
 
@@ -72,14 +76,14 @@ public class PaymentControllerTest {
     @Test
     void shouldGetConsistentPaymentsByDateRange() {
         when(paymentService.getAllConsistentPaymentsByDateRange(hash, dateStart, dateEnd)).thenReturn(buildPaymentsList());
-        var response = paymentController.getConsistentPaymentsByDateRange(hash, dateStart, dateEnd);
+        ResponseEntity<WrapperResponse<List<PaymentDTO>>> response = paymentController.getConsistentPaymentsByDateRange(hash, dateStart, dateEnd);
         assertNotNull(response);
     }
 
     @Test
     void shouldGetInconsistentPaymentsByDateRange() {
         when(paymentService.getAllInconsistentPaymentsByDateRange(hash, dateStart, dateEnd)).thenReturn(buildPaymentsList());
-        var response = paymentController.getInconsistentPaymentsByDateRange(hash, dateStart, dateEnd);
+        ResponseEntity<WrapperResponse<List<PaymentDTO>>> response = paymentController.getInconsistentPaymentsByDateRange(hash, dateStart, dateEnd);
         assertNotNull(response);
     }
 

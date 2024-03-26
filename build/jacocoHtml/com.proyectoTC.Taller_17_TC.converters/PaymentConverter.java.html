@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.converters</a> &gt; <span class="el_source">PaymentConverter.java</span></div><h1>PaymentConverter.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.converters;
+
+import com.proyectoTC.Taller_17_TC.dtos.PaymentDTO;
+import com.proyectoTC.Taller_17_TC.models.Payment;
+import org.springframework.beans.factory.annotation.Autowired;
+
+<span class="fc" id="L7">public class PaymentConverter extends AbstractConverter&lt;Payment, PaymentDTO&gt; {</span>
+
+    @Autowired
+    private StatePaymentConverter statePaymentConverter;
+
+    @Autowired
+    private InvoiceConverter invoiceConverter;
+
+    @Autowired
+    private BranchOfficeConverter branchOfficeConverter;
+
+    @Override
+    public Payment fromDTO(PaymentDTO dto) {
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (dto == null) return null;</span>
+<span class="fc" id="L21">        return Payment.builder()</span>
+<span class="fc" id="L22">                .id(dto.getId())</span>
+<span class="fc" id="L23">                .paymentDate(dto.getPaymentDate())</span>
+<span class="fc" id="L24">                .paymentType(dto.getPaymentType())</span>
+<span class="fc" id="L25">                .statePayment(statePaymentConverter.fromDTO(dto.getStatePaymentDTO()))</span>
+<span class="fc" id="L26">                .paymentValue(dto.getPaymentValue())</span>
+<span class="fc" id="L27">                .invoice(invoiceConverter.fromDTO(dto.getInvoiceDTO()))</span>
+<span class="fc" id="L28">                .branchOffice(branchOfficeConverter.fromDTO(dto.getBranchOfficeDTO()))</span>
+<span class="fc" id="L29">                .build();</span>
+    }
+
+    @Override
+    public PaymentDTO fromEntity(Payment entity) {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (entity == null) return null;</span>
+<span class="fc" id="L35">        return PaymentDTO.builder()</span>
+<span class="fc" id="L36">                .id(entity.getId())</span>
+<span class="fc" id="L37">                .paymentDate(entity.getPaymentDate())</span>
+<span class="fc" id="L38">                .paymentType(entity.getPaymentType())</span>
+<span class="fc" id="L39">                .statePaymentDTO(statePaymentConverter.fromEntity(entity.getStatePayment()))</span>
+<span class="fc" id="L40">                .paymentValue(entity.getPaymentValue())</span>
+<span class="fc" id="L41">                .invoiceDTO(invoiceConverter.fromEntity(entity.getInvoice()))</span>
+<span class="fc" id="L42">                .branchOfficeDTO(branchOfficeConverter.fromEntity(entity.getBranchOffice()))</span>
+<span class="fc" id="L43">                .build();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

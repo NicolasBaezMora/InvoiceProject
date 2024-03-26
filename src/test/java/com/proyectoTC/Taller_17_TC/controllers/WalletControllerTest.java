@@ -2,7 +2,9 @@ package com.proyectoTC.Taller_17_TC.controllers;
 
 
 import com.proyectoTC.Taller_17_TC.converters.WalletConverter;
+import com.proyectoTC.Taller_17_TC.dtos.WalletDTO;
 import com.proyectoTC.Taller_17_TC.models.Wallet;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
 import com.proyectoTC.Taller_17_TC.services.WalletService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -41,14 +44,14 @@ public class WalletControllerTest {
     @Test
     void shouldGetAllWallets() {
         when(walletService.getAllWallets()).thenReturn(buildListWallets());
-        var response = walletController.getAllWallets();
+        ResponseEntity<WrapperResponse<List<WalletDTO>>> response = walletController.getAllWallets();
         assertNotNull(response);
     }
 
     @Test
     void shouldGetBalance() {
         when(walletService.getWallet("", "")).thenReturn(buildWallet());
-        var response = walletController.getBalance("", "");
+        ResponseEntity<WrapperResponse<WalletDTO>> response = walletController.getBalance("", "");
         assertNotNull(response);
     }
 

@@ -31,13 +31,13 @@ public class AgreementTypeConverterTest {
 
     @Test
     void shouldReturnEntityFromDto() {
-        var entity = agreementTypeConverter.fromDTO(buildAgreementTypeDTO());
+        AgreementType entity = agreementTypeConverter.fromDTO(buildAgreementTypeDTO());
         assertNotNull(entity);
     }
 
     @Test
     void shouldReturnDtoFromEntity() {
-        var dto = agreementTypeConverter.fromEntity(buildAgreementType());
+        AgreementTypeDTO dto = agreementTypeConverter.fromEntity(buildAgreementType());
         assertNotNull(dto);
     }
 

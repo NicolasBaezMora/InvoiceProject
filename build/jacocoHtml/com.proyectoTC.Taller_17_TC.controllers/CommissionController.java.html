@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommissionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_17_TC</a> &gt; <a href="index.source.html" class="el_package">com.proyectoTC.Taller_17_TC.controllers</a> &gt; <span class="el_source">CommissionController.java</span></div><h1>CommissionController.java</h1><pre class="source lang-java linenums">package com.proyectoTC.Taller_17_TC.controllers;
+
+
+import com.proyectoTC.Taller_17_TC.converters.CommissionConverter;
+import com.proyectoTC.Taller_17_TC.dtos.CommissionDTO;
+import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
+import com.proyectoTC.Taller_17_TC.models.Commission;
+import com.proyectoTC.Taller_17_TC.response_models.ResponseData;
+import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
+import com.proyectoTC.Taller_17_TC.services.CommissionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(path = &quot;/commission&quot;)
+<span class="fc" id="L23">public class CommissionController {</span>
+
+    @Autowired
+    private CommissionService commissionService;
+
+    @Autowired
+    private CommissionConverter commissionConverter;
+
+    @GetMapping
+    public ResponseEntity&lt;WrapperResponse&lt;ResponseData&lt;CommissionDTO&gt;&gt;&gt; getCommissions(
+            @RequestParam(value = &quot;hash&quot;) String hash,
+            @RequestParam(value = &quot;page&quot;, required = false, defaultValue = &quot;0&quot;) int page
+            //@RequestParam(value = &quot;size&quot;, required = false, defaultValue = &quot;10&quot;) int size
+    ) {
+<span class="fc" id="L37">        Pageable pageable = PageRequest.of(page, 10);</span>
+<span class="fc" id="L38">        Page&lt;Commission&gt; commissionPage = commissionService.getAllCommissionsByBranchOffice(pageable, hash);</span>
+
+<span class="fc" id="L40">        ResponseData&lt;CommissionDTO&gt; responseData = new ResponseData&lt;&gt;();</span>
+<span class="fc" id="L41">        responseData.setData(commissionConverter.fromEntity(commissionPage.getContent()));</span>
+<span class="fc" id="L42">        responseData.setTotalPages(commissionPage.getTotalPages());</span>
+<span class="fc" id="L43">        responseData.setCurrentPage(commissionPage.getNumber());</span>
+<span class="fc" id="L44">        responseData.setTotal(commissionPage.getTotalElements());</span>
+
+<span class="fc" id="L46">        return new WrapperResponse&lt;&gt;(</span>
+                true,
+                responseData,
+                &quot;success&quot;
+<span class="fc" id="L50">        ).createResponse(HttpStatus.OK);</span>
+    }
+
+    @GetMapping(value = &quot;/commissionsByDateRange&quot;)
+    public ResponseEntity&lt;WrapperResponse&lt;List&lt;CommissionDTO&gt;&gt;&gt; getCommissionsByDateRange(
+            @RequestParam(value = &quot;hash&quot;) String hash,
+            @RequestParam(value = &quot;dateStart&quot;) String dateStart,
+            @RequestParam(value = &quot;dateEnd&quot;) String dateEnd
+    ) {
+<span class="fc" id="L59">        return new WrapperResponse&lt;&gt;(</span>
+                true,
+<span class="fc" id="L61">                commissionConverter.fromEntity(commissionService.getAllCommissionsByBranchOfficeAndDateRange(dateStart, dateEnd, hash)),</span>
+                &quot;success&quot;
+<span class="fc" id="L63">        ).createResponse(HttpStatus.OK);</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;WrapperResponse&lt;Object&gt;&gt; generateCommission(
+            @RequestParam(&quot;idBranchOffice&quot;) Long idBranchOffice,
+            @RequestParam(&quot;dateInitial&quot;) String dateInitial,
+            @RequestParam(&quot;dateEnd&quot;) String dateEnd
+    ) {
+
+<span class="fc" id="L73">        commissionService.generateCommissionManually(idBranchOffice, dateInitial, dateEnd);</span>
+
+<span class="fc" id="L75">        return new WrapperResponse&lt;&gt;(</span>
+            true,
+                null,
+                &quot;success&quot;
+<span class="fc" id="L79">        ).createResponse(HttpStatus.OK);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

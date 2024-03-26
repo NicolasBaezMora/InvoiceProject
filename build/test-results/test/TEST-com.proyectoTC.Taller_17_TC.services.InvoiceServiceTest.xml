@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2024-03-26T21:52:09" hostname="SB00144823" time="0.17">
+  <properties/>
+  <testcase name="shouldGetAllPendingInvoicesByDateRange()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.074"/>
+  <testcase name="shouldGetAllPendingInvoices()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.053"/>
+  <testcase name="testSaveInvoice_UpdateWalletBalance()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.023"/>
+  <testcase name="shouldSaveInvoiceUpdateInvoice()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.002"/>
+  <testcase name="shouldGetAllPaidInvoicesByDateRange()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.001"/>
+  <testcase name="shouldGetAllPaidInvoices()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.001"/>
+  <testcase name="shouldSaveInvoiceNoDataFoundException2()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.002"/>
+  <testcase name="shouldSaveInvoiceNewInvoice()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.002"/>
+  <testcase name="shouldSaveInvoiceValidateServiceException()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.002"/>
+  <testcase name="shouldSaveInvoiceGeneralServiceException()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.003"/>
+  <testcase name="shouldSaveInvoiceNoDataFoundException()" classname="com.proyectoTC.Taller_17_TC.services.InvoiceServiceTest" time="0.002"/>
+  <system-out><![CDATA[2024-03-26 16:52:09.359 ERROR 27888 --- [    Test worker] c.p.T.services.InvoiceService            : No se encontro Factura con el id: 1
+2024-03-26 16:52:09.364 ERROR 27888 --- [    Test worker] c.p.T.services.InvoiceService            : Error de validación
+2024-03-26 16:52:09.367 ERROR 27888 --- [    Test worker] c.p.T.services.InvoiceService            : Error inesperado
+2024-03-26 16:52:09.369 ERROR 27888 --- [    Test worker] c.p.T.services.InvoiceService            : No se encontro billetera asociada la factura
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

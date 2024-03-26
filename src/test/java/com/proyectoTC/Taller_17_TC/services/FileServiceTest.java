@@ -38,7 +38,7 @@ public class FileServiceTest {
         MockMultipartFile file = new MockMultipartFile("file", "test.pdf", "text/plain", "test data".getBytes());
         String hash = "12345abcde";
         when(fileProcessor.processDataFile(file, hash)).thenReturn(ResponseFile.builder().build());
-        var response = fileService.loadFile(file, hash);
+        ResponseFile response = fileService.loadFile(file, hash);
         assertNotNull(response);
     }
 
