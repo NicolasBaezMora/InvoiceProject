@@ -64,7 +64,7 @@ public class FileProcessorImpl implements FileProcessor {
         // Empiezo a leer los datos del archivo de la segunda linea para abajo
         while ((line = bufferData.readLine()) != null) {
             if (line.length() > 0) {
-                var arrayData = line.split(";");
+                String[] arrayData = line.split(";");
                 int type = Integer.parseInt(arrayData[0]);
                 if (type == 2) {
                     // Extraigo los datos de la linea leida
@@ -76,7 +76,7 @@ public class FileProcessorImpl implements FileProcessor {
 
                     // Reviso si existe la factura
                     Optional<Invoice> invoiceFound = invoiceRepository.findById(idInvoice);
-                    if (invoiceFound.isEmpty()) {
+                    if (!invoiceFound.isPresent()) {
                         generateInconsistentPayment(valuePay, dateDetail, typePay, idBranchOffice, null);
 
                         incons++;
