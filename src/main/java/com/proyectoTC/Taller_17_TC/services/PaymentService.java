@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaymentService {
 
@@ -33,4 +35,16 @@ public class PaymentService {
         return paymentRepository.getInconsistentPayments(pageable, branchOffice.getId());
     }
 
+    public List<Payment> getAllConsistentPaymentsByDateRange(String hash, String dateStart, String dataEnd) {
+        BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)
+                .orElseThrow(() -> new NoDataFoundException("No se encontro entidad registrada con el hash: " + hash));
+        return paymentRepository.getConsistentPaymentsByDateRange(branchOffice.getId(), dateStart, dataEnd);
+    }
+
+
+    public List<Payment> getAllInconsistentPaymentsByDateRange(String hash, String dateStart, String dataEnd) {
+        BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)
+                .orElseThrow(() -> new NoDataFoundException("No se encontro entidad registrada con el hash: " + hash));
+        return paymentRepository.getInconsistentPaymentsByDateRange(branchOffice.getId(), dateStart, dataEnd);
+    }
 }

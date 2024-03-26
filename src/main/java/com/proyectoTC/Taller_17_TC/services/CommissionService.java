@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class CommissionService {
@@ -32,6 +33,11 @@ public class CommissionService {
         return commissionRepository.getCommissions(pageable, branchOffice);
     }
 
+    public List<Commission> getAllCommissionsByBranchOfficeAndDateRange(String dateStart, String dateEnd, String hash) {
+        BranchOffice branchOffice = branchOfficeRepository.findByHash(hash)
+                .orElseThrow(() -> new NoDataFoundException("No se encontro entidad con el hash: " + hash));
+        return commissionRepository.getCommissionsByDateRange(dateStart, dateEnd, branchOffice.getId());
+    }
 
     @Transactional
     public void generateCommissionManually(Long idBranchOffice, String dateInitial, String dateEnd) {

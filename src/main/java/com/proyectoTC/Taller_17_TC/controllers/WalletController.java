@@ -1,7 +1,6 @@
 package com.proyectoTC.Taller_17_TC.controllers;
 
 
-import com.proyectoTC.Taller_17_TC.converters.ClientConverter;
 import com.proyectoTC.Taller_17_TC.converters.WalletConverter;
 import com.proyectoTC.Taller_17_TC.dtos.WalletDTO;
 import com.proyectoTC.Taller_17_TC.services.WalletService;
@@ -22,9 +21,6 @@ public class WalletController {
 
     @Autowired
     private WalletService walletService;
-
-    @Autowired
-    private ClientConverter clientConverter;
 
     @Autowired
     private WalletConverter walletConverter;

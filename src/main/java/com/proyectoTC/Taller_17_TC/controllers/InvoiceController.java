@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping(path = "/invoice")
@@ -36,8 +38,6 @@ public class InvoiceController {
     ) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Invoice> pageInvoice = invoiceService.getAllPendingInvoices(pageable);
-
-        System.out.println(pageInvoice);
 
         ResponseData<InvoiceDTO> responseData = new ResponseData<>();
         responseData.setTotal(pageInvoice.getTotalElements());
@@ -69,6 +69,30 @@ public class InvoiceController {
         return new WrapperResponse<>(
                 true,
                 responseData,
+                "success"
+        ).createResponse(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/pendingDateRange")
+    public ResponseEntity<WrapperResponse<List<InvoiceDTO>>> getPendingInvoicesByDateRange(
+            @RequestParam(value = "dateStart") String dateStart,
+            @RequestParam(value = "dateEnd") String dateEnd
+    ) {
+        return new WrapperResponse<>(
+                true,
+                invoiceConverter.fromEntity(invoiceService.getAllPendingInvoicesByDateRange(dateStart, dateEnd)),
+                "success"
+        ).createResponse(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/paidDateRange")
+    public ResponseEntity<WrapperResponse<List<InvoiceDTO>>> getPaidInvoicesByDateRange(
+            @RequestParam(value = "dateStart") String dateStart,
+            @RequestParam(value = "dateEnd") String dateEnd
+    ) {
+        return new WrapperResponse<>(
+                true,
+                invoiceConverter.fromEntity(invoiceService.getAllPaidInvoicesByDateRange(dateStart, dateEnd)),
                 "success"
         ).createResponse(HttpStatus.OK);
     }

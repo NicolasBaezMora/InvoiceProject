@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.List;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
@@ -32,6 +33,19 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             nativeQuery = true
     )
     Page<Payment> getInconsistentPayments(Pageable pageable, @Param(value = "idBranchOffice") Long idBranchOffice);
+
+    @Query(
+            value = "SELECT ID, PAYMENT_DATE, PAYMENT_TYPE, PAYMENT_VALUE, ID_BRANCH_OFFICE, ID_INVOICE, ID_STATE_PAYMENT FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 1 AND P.PAYMENT_DATE BETWEEN :dateStart AND :dateEnd ORDER BY P.PAYMENT_DATE",
+            nativeQuery = true
+    )
+    List<Payment> getConsistentPaymentsByDateRange(@Param(value = "idBranchOffice") Long idBranchOffice, @Param(value = "dateStart") String dateStart, @Param(value = "dateEnd") String dateEnd);
+
+    @Query(
+            value = "SELECT ID, PAYMENT_DATE, PAYMENT_TYPE, PAYMENT_VALUE, ID_BRANCH_OFFICE, ID_INVOICE, ID_STATE_PAYMENT FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 51 AND P.PAYMENT_DATE BETWEEN :dateStart AND :dateEnd ORDER BY P.PAYMENT_DATE",
+            nativeQuery = true
+    )
+    List<Payment> getInconsistentPaymentsByDateRange(@Param(value = "idBranchOffice") Long idBranchOffice, @Param(value = "dateStart") String dateStart, @Param(value = "dateEnd") String dateEnd);
+
 
     @Query(
             value = "SELECT COUNT(1) FROM PAYMENT P WHERE (P.ID_BRANCH_OFFICE = :idBranchOffice) AND P.ID_STATE_PAYMENT = 1",

@@ -39,10 +39,19 @@ public class InvoiceService {
     public Page<Invoice> getAllPaidInvoices(Pageable pageable) {
         return invoiceRepository.getPaidInvoices(pageable);
     }
-    public Invoice getInvoiceById(Long idInvoice) {
+
+    public List<Invoice> getAllPendingInvoicesByDateRange(String dateStart, String dateEnd) {
+        return invoiceRepository.getPendingInvoicesByDateRange(dateStart, dateEnd);
+    }
+
+    public List<Invoice> getAllPaidInvoicesByDateRange(String dateStart, String dateEnd) {
+        return invoiceRepository.getPaidInvoicesByDateRange(dateStart, dateEnd);
+    }
+
+    /*public Invoice getInvoiceById(Long idInvoice) {
         return invoiceRepository.findById(idInvoice)
                 .orElseThrow(() -> new NoDataFoundException("No se encontro Factura con el id: " + idInvoice));
-    }
+    }*/
 
     @Transactional
     public Invoice saveInvoice(Invoice invoice) {
@@ -87,5 +96,7 @@ public class InvoiceService {
             throw new GeneralServiceException(e);
         }
     }
+
+
 
 }

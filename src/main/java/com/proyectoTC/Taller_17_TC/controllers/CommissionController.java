@@ -3,6 +3,7 @@ package com.proyectoTC.Taller_17_TC.controllers;
 
 import com.proyectoTC.Taller_17_TC.converters.CommissionConverter;
 import com.proyectoTC.Taller_17_TC.dtos.CommissionDTO;
+import com.proyectoTC.Taller_17_TC.dtos.InvoiceDTO;
 import com.proyectoTC.Taller_17_TC.models.Commission;
 import com.proyectoTC.Taller_17_TC.response_models.ResponseData;
 import com.proyectoTC.Taller_17_TC.response_models.WrapperResponse;
@@ -45,6 +46,19 @@ public class CommissionController {
         return new WrapperResponse<>(
                 true,
                 responseData,
+                "success"
+        ).createResponse(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/commissionsByDateRange")
+    public ResponseEntity<WrapperResponse<List<CommissionDTO>>> getCommissionsByDateRange(
+            @RequestParam(value = "hash") String hash,
+            @RequestParam(value = "dateStart") String dateStart,
+            @RequestParam(value = "dateEnd") String dateEnd
+    ) {
+        return new WrapperResponse<>(
+                true,
+                commissionConverter.fromEntity(commissionService.getAllCommissionsByBranchOfficeAndDateRange(dateStart, dateEnd, hash)),
                 "success"
         ).createResponse(HttpStatus.OK);
     }

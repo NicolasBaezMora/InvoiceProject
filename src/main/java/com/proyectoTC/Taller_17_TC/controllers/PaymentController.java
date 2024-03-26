@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "/payment")
 public class PaymentController {
@@ -72,6 +74,35 @@ public class PaymentController {
                 responseData,
                 "success"
         ).createResponse(HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/consistentDateRange")
+    public ResponseEntity<WrapperResponse<List<PaymentDTO>>> getConsistentPaymentsByDateRange(
+            @RequestParam(value = "hash") String hash,
+            @RequestParam(value = "dateStart") String dateStart,
+            @RequestParam(value = "dateEnd") String dateEnd
+    ) {
+        return new WrapperResponse<>(
+                true,
+                paymentConverter.fromEntity(paymentService.getAllConsistentPaymentsByDateRange(hash, dateStart, dateEnd)),
+                "success"
+        ).createResponse(HttpStatus.OK);
+
+    }
+
+    @GetMapping(value = "/inconsistentDateRange")
+    public ResponseEntity<WrapperResponse<List<PaymentDTO>>> getInconsistentPaymentsByDateRange(
+            @RequestParam(value = "hash") String hash,
+            @RequestParam(value = "dateStart") String dateStart,
+            @RequestParam(value = "dateEnd") String dateEnd
+    ) {
+        return new WrapperResponse<>(
+                true,
+                paymentConverter.fromEntity(paymentService.getAllInconsistentPaymentsByDateRange(hash, dateStart, dateEnd)),
+                "success"
+        ).createResponse(HttpStatus.OK);
+
     }
 
 }

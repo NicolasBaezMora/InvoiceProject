@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.List;
 
 @Repository
 public interface CommissionRepository extends JpaRepository<Commission, Long> {
@@ -23,6 +24,13 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
             nativeQuery = true
     )
     Page<Commission> getCommissions(Pageable pageable, @Param(value = "idBranchOffice") BranchOffice idBranchOffice);
+
+
+    @Query(
+            value = "SELECT ID, VALUE, DATE_GEN, DATE_END_CALCULATION, DATE_INITIAL_CALCULATION, ID_BRANCH_OFFICE FROM COMMISSION C WHERE C.ID_BRANCH_OFFICE = :idBranchOffice AND C.DATE_GEN BETWEEN :dateStart AND :dateEnd ORDER BY C.DATE_GEN",
+            nativeQuery = true
+    )
+    List<Commission> getCommissionsByDateRange(@Param(value = "dateStart") String dateStart, @Param(value = "dateEnd") String dateEnd, @Param(value = "idBranchOffice") Long idBranchOffice);
 
     @Modifying
     @Query(

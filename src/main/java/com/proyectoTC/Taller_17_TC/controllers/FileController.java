@@ -38,18 +38,4 @@ public class FileController {
 
     }
 
-    @GetMapping("/download")
-    public void download(HttpServletResponse httpServletResponse) {
-        try {
-            httpServletResponse.setContentType("text/txt");
-            httpServletResponse.addHeader("Content-Disposition","attachment; filename=\"data.txt\"");
-            CSVPrinter csvPrinter = new CSVPrinter(httpServletResponse.getWriter(), CSVFormat.DEFAULT);
-            csvPrinter.print("Hola");
-            csvPrinter.close();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

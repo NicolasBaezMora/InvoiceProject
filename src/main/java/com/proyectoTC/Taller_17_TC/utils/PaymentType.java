@@ -1,6 +1,5 @@
 package com.proyectoTC.Taller_17_TC.utils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class PaymentType {

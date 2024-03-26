@@ -54,10 +54,7 @@ public class FileProcessorImpl implements FileProcessor {
         String line = bufferData.readLine();
         if (line == null) throw new ValidateServiceException("Estructura del archivo invalida");
 
-        int amountInvoices = Integer.parseInt(line.substring(2, 7));
-        double total = Double.parseDouble(line.substring(7, 16)) + Double.parseDouble(line.substring(16, 19)) / 1000;
-        String dateHeader = line.substring(19, 27);
-        long idBranchOffice = Long.parseLong(line.substring(27));
+        long idBranchOffice = Long.parseLong(line.substring(2));
 
         BranchOffice branchOffice = branchOfficeRepository.findById(idBranchOffice)
                 .orElseThrow(() -> new NoDataFoundException("No se encontro la entidad registrada en el archivo de información con id: " + idBranchOffice));
@@ -67,13 +64,14 @@ public class FileProcessorImpl implements FileProcessor {
         // Empiezo a leer los datos del archivo de la segunda linea para abajo
         while ((line = bufferData.readLine()) != null) {
             if (line.length() > 0) {
-                int type = Integer.parseInt(line.substring(0, 2));
+                var arrayData = line.split(";");
+                int type = Integer.parseInt(arrayData[0]);
                 if (type == 2) {
                     // Extraigo los datos de la linea leida
-                    String dateDetail = line.substring(2, 10);
-                    Long idInvoice = Long.parseLong(line.substring(10, 15));
-                    double valuePay = Double.parseDouble(line.substring(15, 22)) + Double.parseDouble(line.substring(22, 25)) / 1000;
-                    int typePay = Integer.parseInt(line.substring(25));
+                    String dateDetail = arrayData[1];
+                    Long idInvoice = Long.parseLong(arrayData[2]);
+                    double valuePay = Double.parseDouble(arrayData[3]);
+                    int typePay = Integer.parseInt(arrayData[4]);
                     // **********************************************************************************************
 
                     // Reviso si existe la factura
