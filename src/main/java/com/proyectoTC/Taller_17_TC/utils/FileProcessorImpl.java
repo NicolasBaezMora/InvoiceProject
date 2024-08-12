@@ -54,7 +54,8 @@ public class FileProcessorImpl implements FileProcessor {
         String line = bufferData.readLine();
         if (line == null) throw new ValidateServiceException("Estructura del archivo invalida");
 
-        long idBranchOffice = Long.parseLong(line.substring(2));
+        String[] arrayDataHeader = line.split(";");
+        long idBranchOffice = Long.parseLong(arrayDataHeader[1]);
 
         BranchOffice branchOffice = branchOfficeRepository.findById(idBranchOffice)
                 .orElseThrow(() -> new NoDataFoundException("No se encontro la entidad registrada en el archivo de información con id: " + idBranchOffice));
@@ -66,7 +67,7 @@ public class FileProcessorImpl implements FileProcessor {
             if (line.length() > 0) {
                 String[] arrayData = line.split(";");
                 int type = Integer.parseInt(arrayData[0]);
-                if (type == 2) {
+                if (type == 2) { // Verifico que la linea leida es de dataBody y no del dataHeader del archivo de datos
                     // Extraigo los datos de la linea leida
                     String dateDetail = arrayData[1];
                     Long idInvoice = Long.parseLong(arrayData[2]);
